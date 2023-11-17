@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Version>0.6.0</Version>
+        <Authors>gsMelford, Zvesdochyot</Authors>
+        <Company>Ryokutek</Company>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <PackageId>TBot.Telegram.Dto</PackageId>
+        <Title>TBot.Telegram.Dto</Title>
+        <RepositoryUrl>https://github.com/Ryokutek/TBot</RepositoryUrl>
+        <RootNamespace>TBot.Core</RootNamespace>
+        <Product>TBot</Product>
+        <LangVersion>11</LangVersion>
+        <IsPackable>true</IsPackable>
+        <OutputPath>../nupkgs</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
+
+</Project>
