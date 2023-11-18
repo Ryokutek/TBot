@@ -17,4 +17,38 @@ public class Update
     public ChatMemberUpdated? MyChatMember { get; set; }
     public ChatMemberUpdated? ChatMember { get; set; }
     public ChatJoinRequest? ChatJoinRequest { get; set; }
+
+    public Update(
+        int updateId,
+        Message? message, 
+        Message? editedMessage,
+        Message? channelPost,
+        Message? editedChannelPost, 
+        InlineQuery? inlineQuery,
+        ChosenInlineResult? chosenInlineResult,
+        CallbackQuery? callbackQuery, 
+        ShippingQuery? shippingQuery, 
+        PreCheckoutQuery? preCheckoutQuery,
+        Poll? poll, 
+        PollAnswer? pollAnswer,
+        ChatMemberUpdated? myChatMember,
+        ChatMemberUpdated? chatMember, 
+        ChatJoinRequest? chatJoinRequest)
+    {
+        UpdateId = updateId;
+        Message = message;
+        EditedMessage = editedMessage;
+        ChannelPost = channelPost;
+        EditedChannelPost = editedChannelPost;
+        InlineQuery = inlineQuery;
+        ChosenInlineResult = chosenInlineResult;
+        CallbackQuery = callbackQuery;
+        ShippingQuery = shippingQuery;
+        PreCheckoutQuery = preCheckoutQuery;
+        Poll = poll;
+        PollAnswer = pollAnswer;
+        MyChatMember = myChatMember;
+        ChatMember = chatMember;
+        ChatJoinRequest = chatJoinRequest;
+    }
 }
