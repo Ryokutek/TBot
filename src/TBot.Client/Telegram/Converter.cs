@@ -5,6 +5,7 @@ using TBot.Telegram.Dto.Payments;
 using TBot.Telegram.Dto.Stikers;
 using TBot.Telegram.Dto.TelegramPassport;
 using TBot.Telegram.Dto.Types;
+using TBot.Telegram.Dto.Updates;
 using ChatIdentifierDomain = TBot.Core.Telegram.ChatIdentifier;
 using ResponseParametersDto = TBot.Telegram.Dto.Responses.ResponseParametersDto;
 
@@ -12,6 +13,26 @@ namespace TBot.Client.Telegram;
 
 public static class Converter
 {
+	public static Update ToDomain(this UpdateDto dto)
+	{
+		return new Update(
+			dto.UpdateId,
+			dto.Message?.ToDomain(),
+			dto.EditedMessage?.ToDomain(),
+			dto.ChannelPost?.ToDomain(),
+			dto.EditedChannelPost?.ToDomain(),
+			dto.InlineQuery?.ToDomain(),
+			dto.ChosenInlineResult?.ToDomain(),
+			dto.CallbackQuery?.ToDomain(),
+			dto.ShippingQuery?.ToDomain(),
+			dto.PreCheckoutQuery?.ToDomain(),
+			dto.Poll?.ToDomain(),
+			dto.PollAnswer?.ToDomain(),
+			dto.MyChatMember?.ToDomain(),
+			dto.ChatMember?.ToDomain(),
+			dto.ChatJoinRequest?.ToDomain());
+	}
+	
 	public static User ToDomain(this UserDto dto)
 	{
 		return new User(
