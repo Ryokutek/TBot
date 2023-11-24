@@ -3,14 +3,14 @@
 public class Response<TResult>
 {
     public bool StatusOk { get; private set; }
-    public TResult? Result { get; private set; }
+    public TResult Result { get; private set; }
     public string? Description { get; private set; }
     public int? ErrorCode { get; private set; }
     public ResponseParameters? ResponseParameters { get; private set; }
 
     private Response(
         bool statusOk,
-        TResult? result, 
+        TResult result, 
         string? description, 
         int? errorCode, 
         ResponseParameters? responseParameters)
@@ -27,8 +27,8 @@ public class Response<TResult>
         T? result, 
         string? description, 
         int? errorCode, 
-        ResponseParameters? responseParameters)
+        ResponseParameters? responseParameters) where T : new()
     {
-        return new Response<T>(statusOk, result, description, errorCode, responseParameters);
+        return new Response<T>(statusOk, result ?? new T(), description, errorCode, responseParameters);
     }
 }
