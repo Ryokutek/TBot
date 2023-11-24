@@ -1,14 +1,16 @@
+using System.Text.Json;
 using Microsoft.Extensions.Options;
 using TBot.Client.Telegram;
-using TBot.Client.Utilities;
 using TBot.Core.CallLimiter;
 using TBot.Core.HttpRequests;
-using TBot.Core.HttpResponse;
 using TBot.Core.Options;
 using TBot.Core.Parameters;
 using TBot.Core.TBot;
 using TBot.Core.Telegram;
-using TBot.Telegram.Dto.Responses;
+using TBot.Dto.Responses;
+using TBot.Dto.Types;
+using TBot.Dto.Updates;
+
 namespace TBot.Client;
 
 // ReSharper disable once InconsistentNaming
@@ -32,32 +34,38 @@ public class TBotClient : ITBotClient
         _callLimitService = callLimitService;
     }
     
-    public Task<Result<Message>> SendMessageAsync(SendMessageParameters parameters)
+    public Task<Response<Message>> SendMessageAsync(SendMessageParameters parameters)
     {
         var request = RequestDescriptor.Create(HttpMethod.Post, "/sendMessage", parameters.ToParameters().ToList());
-        return SendAsync<Message>(request);
+        return SendAsync<Message, MessageDto>(request, dto => dto.ToDomain());
     }
 
-    public Task<Result<List<Update>>> GetUpdateAsync(GetUpdateParameters parameters)
+    public Task<Response<List<Update>>> GetUpdateAsync(GetUpdateParameters parameters)
     {
         var request = RequestDescriptor.Create(HttpMethod.Post, "/getUpdates", parameters.ToParameters().ToList());
-        return SendAsync<List<Update>>(request);
+        return SendAsync<List<Update>, List<UpdateDto>>(request, 
+            dtoList => dtoList.Select(x=>x.ToDomain()).ToList());
     }
     
-    private async Task<Result<TResponse>> SendAsync<TResponse>(RequestDescriptor request) where TResponse : new()
+    public async Task<Response<TResponseDomain>> SendAsync<TResponseDomain, TResponseDto>(
+        RequestDescriptor request, Func<TResponseDto, TResponseDomain> convertor) where TResponseDomain : new()
     {
         var response = await SendAsync(request);
-        var dto = (await response.DeserializeAsync<ResponseDto>())!;
-        var domain = Response<TResponse>.Create(
-            dto.StatusOk,
-            dto.Result is not null ? dto.Result.ToObject<TResponse>() : new TResponse(),
-            dto.Description,
-            dto.ErrorCode,
-            dto.ResponseParameters?.ToDomain());
+        var responseSteam = await response.Content.ReadAsStreamAsync();
+        var responseDto = await JsonSerializer.DeserializeAsync<ResponseDto<TResponseDto>>(responseSteam);
 
-        return Result<TResponse>.Create(domain, response);
+        if (responseDto is null) {
+            throw new Exception();
+        }
+
+        return Response<TResponseDomain>.Create(
+            responseDto.StatusOk,
+            convertor(responseDto.Result!),
+            responseDto.Description,
+            responseDto.ErrorCode,
+            responseDto.ResponseParameters?.ToDomain());
     }
-    
+
     public async Task<HttpResponseMessage> SendAsync(RequestDescriptor request)
     {
         var telegramRequest = TelegramRequest.Create(_botOptions.Token, request);

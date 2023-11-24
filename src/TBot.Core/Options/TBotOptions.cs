@@ -1,12 +1,11 @@
 using System.Text.RegularExpressions;
-using TBot.Core.Options.CallLimiter.Redis;
 
 namespace TBot.Core.Options;
 
 // ReSharper disable once InconsistentNaming
 public partial class TBotOptions
 {
-    public const string BotOptionsName = "BotOptions";
+    public const string OptionsName = "TBotOptions";
     
     [GeneratedRegex("^[0-9]{8,10}:[a-zA-Z0-9_-]{35}$", RegexOptions.Compiled)]
     private static partial Regex BotTokenValidationRegex();
@@ -25,7 +24,7 @@ public partial class TBotOptions
 
     public string UpdatePath { get; set; } = null!;
     public UpdateOptions UpdateOptions { get; set; } = new ();
-    public RedisOption? RedisOption { get; set; }
+    public RedisOptions? RedisOption { get; set; }
 
     private static void Validate(string token)
     {

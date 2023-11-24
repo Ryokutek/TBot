@@ -1,7 +1,10 @@
 namespace TBot.Core.Options;
 
+// ReSharper disable once InconsistentNaming
 public class CallLimiterOptions
 {
+    public const string OptionsName = "CallLimiterOptions";
+    
     public string StoreConnectionString { get; set; } = null!;
     public string StoreName { get; set; } = "Default";
     public int ThreadInitialCount { get; set; } = 20;
