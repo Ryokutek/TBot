@@ -8,8 +8,8 @@
         <Authors>gsMelford, Zvesdochyot</Authors>
         <Company>Ryokutek</Company>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <PackageId>TBot.Telegram.Dto</PackageId>
-        <Title>TBot.Telegram.Dto</Title>
+        <PackageId>TBot.Client</PackageId>
+        <Title>TBot.Client</Title>
         <RepositoryUrl>https://github.com/Ryokutek/TBot</RepositoryUrl>
         <RootNamespace>TBot.Client</RootNamespace>
         <Product>TBot</Product>
@@ -31,7 +31,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\TBot.Core\TBot.Core.csproj" />
-      <ProjectReference Include="..\TBot.Telegram.Dto\TBot.Telegram.Dto.csproj" />
+      <ProjectReference Include="..\TBot.Dto\TBot.Dto.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="AspNet\" />
     </ItemGroup>
 
     <Target Condition="$(Configuration) == 'Debug'" Name="NugetPackAutoVersioning" AfterTargets="Build">

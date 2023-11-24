@@ -35,18 +35,18 @@ public class LongPollingService : ILongPollingService
                     return;
                 }
 
-                var result = await _botClient.GetUpdateAsync(UpdateParameters);
-                if (!result.Response.Result!.Any())
+                var response = await _botClient.GetUpdateAsync(UpdateParameters);
+                if (!response.Result.Any())
                 {
                     continue;
                 }
 
-                foreach (var updateDto in result.Response.Result!)
+                foreach (var updateDto in response.Result)
                 {
                     using (CurrentSessionThread.SetSession(Session.Create(Guid.NewGuid(), updateDto.Message!.Chat.Id)))
                     {
                         await updateAction(updateDto);
-                    } //TODO: Consider the origin of the update in the Domain model
+                    }
                     
                     UpdateParameters.Offset = updateDto.UpdateId + 1;
                 }

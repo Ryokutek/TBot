@@ -1,7 +1,10 @@
-﻿namespace TBot.Core.Telegram;
+﻿using System.Text.Json.Serialization;
+
+namespace TBot.Core.Telegram;
 
 public class Update
 {
+    [JsonPropertyName("update_id")]
     public int UpdateId { get; set; }
     public Message? Message { get; set; }
     public Message? EditedMessage { get; set; }
@@ -50,5 +53,10 @@ public class Update
         MyChatMember = myChatMember;
         ChatMember = chatMember;
         ChatJoinRequest = chatJoinRequest;
+    }
+
+    public bool IsMessage()
+    {
+        return Message is not null;
     }
 }

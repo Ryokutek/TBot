@@ -24,6 +24,12 @@ public class PipelineCoordinator
         return _pipelineContext;
     }
     
+    public PipelineContext ReturnContinued()
+    {
+        PipelineStatus = PipelineStatus.Continue;
+        return _pipelineContext;
+    }
+    
     public PipelineContext WithStatus(PipelineStatus pipelineStatus)
     {
         PipelineStatus = pipelineStatus;

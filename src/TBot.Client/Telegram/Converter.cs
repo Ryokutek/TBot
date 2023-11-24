@@ -1,13 +1,14 @@
 using TBot.Core.Telegram;
-using TBot.Telegram.Dto.Games;
-using TBot.Telegram.Dto.InlineModes;
-using TBot.Telegram.Dto.Payments;
-using TBot.Telegram.Dto.Stikers;
-using TBot.Telegram.Dto.TelegramPassport;
-using TBot.Telegram.Dto.Types;
-using TBot.Telegram.Dto.Updates;
+using TBot.Dto.Games;
+using TBot.Dto.InlineModes;
+using TBot.Dto.Payments;
+using TBot.Dto.Stikers;
+using TBot.Dto.TelegramPassport;
+using TBot.Dto.Types;
+using TBot.Dto.Updates;
+using ChatIdentifier = TBot.Dto.Types.ChatIdentifier;
 using ChatIdentifierDomain = TBot.Core.Telegram.ChatIdentifier;
-using ResponseParametersDto = TBot.Telegram.Dto.Responses.ResponseParametersDto;
+using ResponseParametersDto = TBot.Dto.Responses.ResponseParametersDto;
 
 namespace TBot.Client.Telegram;
 
@@ -792,7 +793,7 @@ public static class Converter
 		);
 	}
 	
-	private static bool TryLongParse(TBot.Telegram.Dto.Types.ChatIdentifier chatIdentifier, out long result)
+	private static bool TryLongParse(ChatIdentifier chatIdentifier, out long result)
 	{
 		return long.TryParse(chatIdentifier.ToString(), out result);
 	}
