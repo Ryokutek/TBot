@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using TBot.Core.TBot.RequestIdentification;
 using TBot.Core.Telegram;
 using TBot.Core.UpdateEngine;
 
@@ -18,7 +19,7 @@ public class UpdateEngineService : IUpdateEngineService
     public async Task StartAsync(Update update)
     {
         var pipelines = _pipelines.ToList();
-        var context = PipelineContext.Create(update);
+        var context = Context.Create(CurrentSessionThread.Session ?? throw new Exception(), update);
         
         string? nextPipeline = null;
         var currentPipeline = string.Empty;
@@ -35,17 +36,17 @@ public class UpdateEngineService : IUpdateEngineService
                 currentPipeline = pipeline.PipelineName;
                 context = await pipeline.ExecuteAsync(context);
 
-                switch (context.GetCoordinator().PipelineStatus)
+                switch (context.GetCoordinator().Status)
                 {
-                    case PipelineStatus.Interrupt or PipelineStatus.Continue: continue;
-                    case PipelineStatus.Complete: return;
-                    case PipelineStatus.GoTo: break;
+                    case Status.Interrupt or Status.Continue: continue;
+                    case Status.Complete: return;
+                    case Status.GoTo: break;
                 }
             }
             catch (Exception e)
             {
                 _logger?.LogError(e, "UpdatePipeline has crashed. PipelineName: {PipelineName}", currentPipeline);
-                context.GetCoordinator().WithStatus(PipelineStatus.Interrupt);
+                context.GetCoordinator().WithStatus(Status.Interrupt);
             }
         }
     }

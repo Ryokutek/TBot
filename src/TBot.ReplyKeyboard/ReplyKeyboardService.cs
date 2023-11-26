@@ -30,7 +30,7 @@ public class ReplyKeyboardService : IUpdatePipeline
         _itBotStore = itBotStore;
     }
 
-    public async Task<PipelineContext> ExecuteAsync(PipelineContext context)
+    public async Task<Context> ExecuteAsync(Context context)
     {
         if (!context.Update.IsMessage()) {
             return context.GetCoordinator().ReturnContinued();

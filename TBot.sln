@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E2B37EDC-16F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBot.Client", "src\TBot.Client\TBot.Client.csproj", "{02E412C0-F61F-416A-A3B3-7A3B77691D3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBot.CommandProcessor", "src\TBot.CommandProcessor\TBot.CommandProcessor.csproj", "{56A19F29-2E0C-4238-9D69-5C7A3F37E937}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBot.Command", "src\TBot.Command\TBot.Command.csproj", "{56A19F29-2E0C-4238-9D69-5C7A3F37E937}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBot.Core", "src\TBot.Core\TBot.Core.csproj", "{BD8F1F87-96A3-4375-8FCD-8107390EB923}"
 EndProject
