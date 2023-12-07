@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TBot.Core.UpdateEngine;
+using TBot.Core.UpdateEngine.Abstraction;
 
 namespace TBot.Core.Builders;
 

@@ -2,52 +2,34 @@
 using TBot.Core.TBot.RequestIdentification;
 using TBot.Core.Telegram;
 using TBot.Core.UpdateEngine;
+using TBot.Core.UpdateEngine.Abstraction;
 
 namespace TBot.Client.Services.UpdateEngine;
 
 public class UpdateEngineService : IUpdateEngineService
 {
     private readonly ILogger<IUpdateEngineService> _logger;
-    private readonly IEnumerable<IUpdatePipeline> _pipelines;
+    private readonly List<IUpdatePipeline> _pipelines;
 
     public UpdateEngineService(ILogger<IUpdateEngineService> logger, IEnumerable<IUpdatePipeline> pipelines)
     {
         _logger = logger;
-        _pipelines = pipelines;
+        _pipelines = pipelines.ToList();
     }
 
     public async Task StartAsync(Update update)
     {
-        var pipelines = _pipelines.ToList();
-        var context = Context.Create(CurrentSessionThread.Session ?? throw new Exception(), update);
-        
-        string? nextPipeline = null;
-        var currentPipeline = string.Empty;
-        
-        for (var i = 0; i < pipelines.Count; i++)
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(nextPipeline)) {
-                    i = pipelines.FindIndex(pipeline => pipeline.PipelineName == nextPipeline);
-                }
-
-                var pipeline = pipelines[i];
-                currentPipeline = pipeline.PipelineName;
-                context = await pipeline.ExecuteAsync(context);
-
-                switch (context.GetCoordinator().Status)
-                {
-                    case Status.Interrupt or Status.Continue: continue;
-                    case Status.Complete: return;
-                    case Status.GoTo: break;
-                }
-            }
-            catch (Exception e)
-            {
-                _logger?.LogError(e, "UpdatePipeline has crashed. PipelineName: {PipelineName}", currentPipeline);
-                context.GetCoordinator().WithStatus(Status.Interrupt);
-            }
+        if (!_pipelines.Any()) {
+            return;
         }
+        
+        var updatePipelineMaster = new UpdatePipeline().SetNextPipeline(_pipelines.First());
+        for (int i = 1; i < _pipelines.Count; i++)
+        {
+            updatePipelineMaster.SetNextPipeline(_pipelines[i]);
+        }
+        
+        var context = Context.Create(CurrentSessionThread.Session ?? throw new Exception(), update);
+        await updatePipelineMaster.ExecuteAsync(context);
     }
 }
