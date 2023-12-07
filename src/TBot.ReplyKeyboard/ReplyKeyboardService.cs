@@ -10,10 +10,8 @@ using ReplyKeyboardMarkup = TBot.Core.Parameters.ReplyMarkupParameters.Keyboards
 
 namespace TBot.ReplyKeyboard;
 
-public class ReplyKeyboardService : IUpdatePipeline
+public class ReplyKeyboardService : UpdatePipeline
 {
-    public string PipelineName => "TBot:ReplyKeyboard";
-
     private readonly RootReplyKeyboard _rootReplyKeyboard;
     private readonly ITBotClient _tBotClient;
     private readonly ITBotStore? _itBotStore;
@@ -30,10 +28,10 @@ public class ReplyKeyboardService : IUpdatePipeline
         _itBotStore = itBotStore;
     }
 
-    public async Task<PipelineContext> ExecuteAsync(PipelineContext context)
+    public override async Task<Context> ExecuteAsync(Context context)
     {
         if (!context.Update.IsMessage()) {
-            return context.GetCoordinator().ReturnContinued();
+            return await ExecuteNextAsync(context);
         }
         
         var key = GetKey(CurrentSessionThread.Session!.ChatId.ToString());
@@ -45,13 +43,13 @@ public class ReplyKeyboardService : IUpdatePipeline
         {
             keyboardModel = await TryGetPreviousKeyboardAsync(key, message.Text!);
             if (keyboardModel is null) {
-                return context.GetCoordinator().ReturnContinued(); 
+                return await ExecuteNextAsync(context);
             }
         }
 
-        await SendKeyboardAsync(message.From!.Id, keyboardModel);
-        await SaveReplyKeyboardStateAsync(key, keyboardModel.Name);
-        return context.GetCoordinator().ReturnContinued(); 
+        await SendKeyboardAsync(message.From!.Id, keyboardModel!);
+        await SaveReplyKeyboardStateAsync(key, keyboardModel!.Name);
+        return await ExecuteNextAsync(context);
     }
 
     private async Task<ReplyKeyboardModel?> TryGetPreviousKeyboardAsync(string key, string messageText)
