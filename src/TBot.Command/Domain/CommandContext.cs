@@ -2,11 +2,11 @@
 using TBot.Core.Telegram;
 using TBot.Core.UpdateEngine;
 
-namespace TBot.CommandProcessor.Models;
+namespace TBot.Command.Domain;
 
 public class CommandContext : Context
 {
-    protected CommandContext(Session session, Update update) : base(session, update)
+    public CommandContext(Session session, Update update) : base(session, update)
     {
     }
 }

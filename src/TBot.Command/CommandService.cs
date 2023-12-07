@@ -1,142 +1,101 @@
-﻿using TBot.CommandProcessor.Abstractions;
-using TBot.CommandProcessor.Models;
-using TBot.Core.Stores;
+﻿using TBot.Command.Abstractions;
+using TBot.Command.Domain;
+using TBot.Command.Interfaces;
 using TBot.Core.UpdateEngine;
 
-namespace TBot.CommandProcessor;
+namespace TBot.Command;
 
-public class CommandService : IUpdatePipeline
+public class CommandService : UpdatePipeline
 {
-    public string PipelineName => "TBot:Command";
-
-    private readonly ITBotStore _tBotStore;
-    private readonly List<ICommandFactory> _commandFactories;
-
-    private string GetStoreKey(long chatId) => $"{PipelineName}:{chatId}";
-
-    public CommandService(ITBotStore tBotStore, IEnumerable<ICommandFactory> commandFactories)
-    {
-        _tBotStore = tBotStore;
-        _commandFactories = commandFactories.ToList();
-    }
+    private readonly ICommandFactory _commandFactory;
+    private readonly ICommandStoreService _commandStoreService;
     
-    public async Task<Context> ExecuteAsync(Context context)
+    public CommandService(
+        ICommandFactory commandFactory,
+        ICommandStoreService commandStoreService)
     {
-        var storeKey = GetStoreKey(context.Session.ChatId);
-        var commandContext = (CommandContext)Context.Create(context.Session, context.Update);
-        
-        Command? command = default;
-        if (!await _tBotStore.ContainsAsync(storeKey)) {
-            command = await BuildCommandFromStoreAsync(storeKey, commandContext);
-        }
-
-        if (command is null && !TryGetCommandFromMessage(context.Update.Message!.Text!, commandContext, out command)) {
-            return context.GetCoordinator().ReturnContinued();
-        }
-
-
-        command = await HandleCommandAsync(commandContext, command!);
-        await SaveCommandAsync(storeKey, commandContext, command);
-        return context.GetCoordinator().ReturnContinued();
+        _commandFactory = commandFactory;
+        _commandStoreService = commandStoreService;
     }
 
-    private async Task<Command> HandleCommandAsync(CommandContext commandContext, Command command)
-    {
-        commandContext = await DoCommandAsync(command.CurrentStep!, commandContext, command.CurrentStepState!.Value);
+    public override async Task<Context> ExecuteAsync(Context context)
+    { 
+        var commandName = context.Update.Message!.Text!;
+        var chatId = context.Update.Message.From!.Id;
 
-        if (commandContext.GetCoordinator().Status == Status.Continue)
+        var isCommandActive = await _commandStoreService.IsCommandActiveAsync(chatId);
+        if (!_commandFactory.IsCommandExist(commandName) && !isCommandActive)
+            return await ExecuteNextAsync(context);
+        
+        var commandContext = new CommandContext(context.Session, context.Update);
+        var commandDescriptor = await GetCommandDescriptorAsync(commandName, chatId);
+        var commandContainer = await _commandStoreService.GetCommandContainerAsync(commandContext.Session.ChatId);
+        
+        var executedCommand = await ExecuteCommandAsync(commandDescriptor, commandContext, commandContainer);
+
+        if (!commandDescriptor.IsCommandComplete()) {
+            await _commandStoreService.SaveCommandAsync(context.Session, executedCommand.CommandDescriptor);
+            await _commandStoreService.SaveCommandContainerAsync(commandContext.Session, executedCommand.CommandContainer);
+        }
+        else {
+            await _commandStoreService.ClearCommandAsync(context.Session);
+        }
+        
+        return await ExecuteNextAsync(context);
+    }
+
+    private async Task<CommandDescriptor> GetCommandDescriptorAsync(string commandName, long chatId)
+    {
+        CommandDescriptor commandDescriptor;
+        if (await _commandStoreService.IsCommandActiveAsync(chatId)) {
+            commandDescriptor = await _commandStoreService.GetCommandDescriptorAsync(chatId);
+        }
+        else {
+            commandDescriptor = CommandDescriptor.CreateNew(commandName, _commandFactory.GetTotalParts(commandName));
+        }
+
+        return commandDescriptor;
+    }
+
+    private async Task<ExecuteCommandResult> ExecuteCommandAsync(
+        CommandDescriptor descriptor,
+        CommandContext commandContext, 
+        CommandContainer? container)
+    {
+        container ??= new CommandContainer();
+        var commandPart = GetCommandPart(descriptor, commandContext, container);
+
+        if (descriptor.State == CommandPartState.Action)
         {
-            switch (command.CurrentStepState)
-            {
-                case CommandStepState.Action:
-                    command.IncrementStepState();
-                    return command;
-                case CommandStepState.Process:
-                    command.IncrementStep();
-                    return command;
+            await commandPart.ExecuteActionRequestAsync();
+            descriptor.SetProcessState();
+        }
+
+        if (descriptor.State == CommandPartState.Process)
+        {
+            await commandPart.ExecuteProcessAnswerAsync();
+            if (commandPart.IsCommandPartCompleted) {
+                descriptor.IncrementPart();
+                if (!descriptor.IsCommandComplete()) {
+                    return await ExecuteCommandAsync(descriptor, commandContext, container);
+                }
             }
         }
-        else if(commandContext.GetCoordinator().Status == Status.Complete)
-        {
-            command.SetCommandComplete();
-        }
-        else if(commandContext.GetCoordinator().Status == Status.Interrupt)
-        {
-            await DoCommandAsync(command.CurrentStep!, commandContext, CommandStepState.RepeatAction);
-        }
-        else if(commandContext.GetCoordinator().Status == Status.GoTo)
-        {
-            command.SetStep(commandContext.GetCoordinator().GoToName!);
-        }
-
-        return command;
-    }
-    
-    private bool TryGetCommandFromMessage(string textMassage, CommandContext commandContext, out Command? command)
-    {
-        command = default;
-        var commandFactory = _commandFactories
-            .FirstOrDefault(x => x.CommandName == textMassage);
-
-        if (commandFactory is null) {
-            return false;
-        }
-
-        command = Command.CreateNew(commandFactory.CommandName, commandFactory.CommandSteps, commandContext);
-        return true;
-    }
-    
-    private async Task<Command> BuildCommandFromStoreAsync(string storeKey, CommandContext commandContext)
-    {
-        var storeState = (await _tBotStore.GetAsync<CommandStoreState>(storeKey))!;
-        var commandFactory = _commandFactories.FirstOrDefault(
-            x => x.CommandName == storeState.CurrentCommandName);
-
-        if (commandFactory is null) {
-            throw new Exception($"Command {storeState.CurrentCommandName} is not found");
-        }
-            
-        var step = commandFactory.CommandSteps
-            .FirstOrDefault(x => x.StepName == storeState.CurrentStepName);
-
-        if (step is null ) {
-            throw new Exception($"Command Step {storeState.CurrentStepName} is not found");
-        }
-
-        commandContext.SetState(commandContext.State);
-        var stepState = Enum.Parse<CommandStepState>(storeState.StepState);
         
-        return Command.Create(
-            commandFactory.CommandName,
-            step,
-            stepState,
-            commandFactory.CommandSteps,
-            commandContext);
-    }
-
-    private async Task<CommandContext> DoCommandAsync(
-        BaseCommandStep baseCommandStep, 
-        CommandContext commandContext, 
-        CommandStepState stepState)
-    {
-        return stepState switch
+        return new ExecuteCommandResult
         {
-            CommandStepState.Action => await baseCommandStep.SendActionRequestAsync(commandContext),
-            CommandStepState.Process => await baseCommandStep.ProcessAnswerAsync(commandContext),
-            CommandStepState.RepeatAction => await baseCommandStep.SendRepeatActionRequestAsync(commandContext),
-            _ => throw new ArgumentException($"Command State {Enum.GetName(stepState)} is not found")
+            CommandDescriptor = descriptor,
+            CommandContainer = container
         };
     }
 
-    private Task SaveCommandAsync(string storeKey, CommandContext commandContext, Command command)
+    private CommandPart GetCommandPart(
+        CommandDescriptor descriptor, 
+        CommandContext commandContext,
+        CommandContainer commandContainer)
     {
-        return _tBotStore.SetAsync(storeKey, new CommandStoreState
-        {
-            State = commandContext.State,
-            ChatId = commandContext.Session.ChatId,
-            CurrentCommandName = command.Name,
-            CurrentStepName = command.CurrentStep!.StepName,
-            StepState = Enum.GetName(command.CurrentStepState!.Value)!
-        });
+        var commandPart = _commandFactory.CreateCommandPart(descriptor.Name, descriptor.PartNumber);
+        commandPart.Init(commandContext, commandContainer);
+        return commandPart;
     }
 }
