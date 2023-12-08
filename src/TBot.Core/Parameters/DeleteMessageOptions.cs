@@ -3,11 +3,11 @@ using TBot.Core.Telegram;
 
 namespace TBot.Core.Parameters;
 
-public class DeleteMessageParameters : BaseParameters
+public class DeleteMessageOptions : BaseOptions
 {
-    [Parameter("chat_id", Required = true)]
+    [QueryParameter("chat_id", Required = true)]
     public ChatIdentifier ChatId { get; set; } = null!;
     
-    [Parameter("message_id", Required = true)]
+    [QueryParameter("message_id", Required = true)]
     public int MessageId { get; set; }
 }
