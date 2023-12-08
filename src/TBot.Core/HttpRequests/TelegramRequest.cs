@@ -32,17 +32,29 @@ public class TelegramRequest
         var httpRequestMessage = new HttpRequestMessage();
         var uriBuilder = new UriBuilder(GetBaseUrl(_token) + _requestDescriptor.Endpoint);
         
-        if (_requestDescriptor.Headers.Count > 0) 
+        foreach (var parameter in _requestDescriptor.Headers)
         {
-            foreach (var parameter in _requestDescriptor.Headers)
-            {
-                httpRequestMessage.Headers.TryAddWithoutValidation(parameter.Key, parameter.Value);
-            }
+            httpRequestMessage.Headers.TryAddWithoutValidation(parameter.Key, parameter.Value);
         }
-        
+
+        HttpContent? httpContent = default;
+        foreach (var content in _requestDescriptor.Contents)
+        {
+            if (content.MediaType != "multipart/form-data") {
+                continue;
+            }
+            
+            var multipartFormDataContent = new MultipartFormDataContent();
+            multipartFormDataContent.Add(new StreamContent((Stream)content.Value), "video", $"TBot:{Guid.NewGuid()}");
+            httpContent = multipartFormDataContent;
+        }
+
         uriBuilder.Query = string.Join("&", _requestDescriptor.QueryParameters.Select(x => $"{x.Key}={x.Value}"));
         httpRequestMessage.RequestUri = new Uri(uriBuilder.Uri.AbsoluteUri);
         httpRequestMessage.Method = _requestDescriptor.Method;
+        if (httpContent is not null) {
+            httpRequestMessage.Content = httpContent;
+        }
         
         return httpRequestMessage;
     }

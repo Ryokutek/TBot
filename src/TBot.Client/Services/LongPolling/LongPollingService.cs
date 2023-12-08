@@ -11,7 +11,7 @@ namespace TBot.Client.Services.LongPolling;
 public class LongPollingService : ILongPollingService
 {
     private readonly ITBotClient _botClient;
-    private GetUpdateParameters UpdateParameters { get; set; } = new ();
+    private GetUpdateOptions UpdateOptions { get; set; } = new ();
 
     public LongPollingService(ITBotClient botClient, IOptions<UpdateOptions>? updateOptions = null)
     {
@@ -20,8 +20,8 @@ public class LongPollingService : ILongPollingService
             return;
         }
         
-        UpdateParameters.Limit = updateOptions.Value.Limit;
-        UpdateParameters.Timeout = updateOptions.Value.TimeoutSeconds;
+        UpdateOptions.Limit = updateOptions.Value.Limit;
+        UpdateOptions.Timeout = updateOptions.Value.TimeoutSeconds;
     }
     
     public void Start(Func<Update, Task> updateAction, CancellationToken? cancellationToken = null)
@@ -35,7 +35,7 @@ public class LongPollingService : ILongPollingService
                     return;
                 }
 
-                var response = await _botClient.GetUpdateAsync(UpdateParameters);
+                var response = await _botClient.GetUpdateAsync(UpdateOptions);
                 if (!response.Result.Any())
                 {
                     continue;
@@ -48,7 +48,7 @@ public class LongPollingService : ILongPollingService
                         await updateAction(updateDto);
                     }
                     
-                    UpdateParameters.Offset = updateDto.UpdateId + 1;
+                    UpdateOptions.Offset = updateDto.UpdateId + 1;
                 }
             }
         });
