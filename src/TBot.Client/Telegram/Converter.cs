@@ -7,7 +7,6 @@ using TBot.Dto.TelegramPassport;
 using TBot.Dto.Types;
 using TBot.Dto.Updates;
 using ChatIdentifier = TBot.Dto.Types.ChatIdentifier;
-using ChatIdentifierDomain = TBot.Core.Telegram.ChatIdentifier;
 using ResponseParametersDto = TBot.Dto.Responses.ResponseParametersDto;
 
 namespace TBot.Client.Telegram;
@@ -117,7 +116,7 @@ public static class Converter
 			dto.Photo?.Select(ToDomain).ToList(),
 			dto.Sticker?.ToDomain(),
 			new Story(), //TODO: dto.Story,
-			new Video(), //TODO: dto.Video,
+			dto.Video?.ToDomain(),
 			dto.VideoNote?.ToDomain(),
 			dto.Voice?.ToDomain(),
 			dto.Caption,
@@ -164,6 +163,20 @@ public static class Converter
 		);
 	}
 
+	private static Video ToDomain(this VideoDto dto)
+	{
+		return new Video(
+			dto.FileId,
+			dto.FileUniqueId,
+			dto.Width,
+			dto.Height,
+			dto.Duration,
+			dto.Thumbnail?.ToDomain(),
+			dto.FileName,
+			dto.MimeType,
+			dto.FileSize);
+	}
+	
 	public static MessageId ToDomain(this MessageIdDto dto)
 	{
 		return new MessageId(

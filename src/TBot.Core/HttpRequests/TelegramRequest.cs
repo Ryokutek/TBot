@@ -1,4 +1,6 @@
-﻿namespace TBot.Core.HttpRequests;
+﻿using TBot.Core.TBot;
+
+namespace TBot.Core.HttpRequests;
 
 public class TelegramRequest
 {
@@ -37,25 +39,34 @@ public class TelegramRequest
             httpRequestMessage.Headers.TryAddWithoutValidation(parameter.Key, parameter.Value);
         }
 
-        HttpContent? httpContent = default;
-        foreach (var content in _requestDescriptor.Contents)
-        {
-            if (content.MediaType != "multipart/form-data") {
-                continue;
-            }
-            
-            var multipartFormDataContent = new MultipartFormDataContent();
-            multipartFormDataContent.Add(new StreamContent((Stream)content.Value), "video", $"TBot:{Guid.NewGuid()}");
-            httpContent = multipartFormDataContent;
+        if (_requestDescriptor.Contents.Any()) {
+            httpRequestMessage.Content = BuildHttpContent();
         }
 
-        uriBuilder.Query = string.Join("&", _requestDescriptor.QueryParameters.Select(x => $"{x.Key}={x.Value}"));
+        uriBuilder.Query = string.Join("&", _requestDescriptor.QueryParameters
+            .Select(x => $"{x.Key}={x.Value}"));
+        
         httpRequestMessage.RequestUri = new Uri(uriBuilder.Uri.AbsoluteUri);
         httpRequestMessage.Method = _requestDescriptor.Method;
-        if (httpContent is not null) {
-            httpRequestMessage.Content = httpContent;
-        }
-        
         return httpRequestMessage;
+    }
+
+    private HttpContent BuildHttpContent()
+    {
+        var multipartFormDataContent = new MultipartFormDataContent();
+        foreach (var content in _requestDescriptor.Contents)
+        {
+            switch (content.MediaType)
+            {
+                case ContentHeaders.MultipartFormData:
+                    multipartFormDataContent.Add(new StreamContent((Stream)content.Value), "video", $"TBot.{Guid.NewGuid()}");
+                    break;
+                case ContentHeaders.TextPlain:
+                    multipartFormDataContent.Add(new StringContent((content.Value as string)!), content.Name);
+                    break;
+            }
+        }
+
+        return multipartFormDataContent;
     }
 }

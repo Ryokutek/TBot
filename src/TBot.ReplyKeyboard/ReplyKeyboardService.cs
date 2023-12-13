@@ -1,12 +1,12 @@
-﻿using TBot.Core.Parameters;
+﻿using TBot.Core.RequestOptions;
 using TBot.Core.Stores;
 using TBot.Core.TBot;
 using TBot.Core.TBot.RequestIdentification;
 using TBot.Core.Telegram;
 using TBot.Core.UpdateEngine;
 using TBot.ReplyKeyboard.Models;
-using KeyboardButton = TBot.Core.Parameters.ReplyMarkupParameters.Buttons.KeyboardButton;
-using ReplyKeyboardMarkup = TBot.Core.Parameters.ReplyMarkupParameters.Keyboards.ReplyKeyboardMarkup;
+using KeyboardButton = TBot.Core.RequestOptions.ReplyMarkupParameters.Buttons.KeyboardButton;
+using ReplyKeyboardMarkup = TBot.Core.RequestOptions.ReplyMarkupParameters.Keyboards.ReplyKeyboardMarkup;
 
 namespace TBot.ReplyKeyboard;
 

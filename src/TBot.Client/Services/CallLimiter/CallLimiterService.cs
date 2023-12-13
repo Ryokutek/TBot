@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using Microsoft.Extensions.Logging;
 using TBot.Core.CallLimiter;
-using TBot.Core.Options;
+using TBot.Core.ConfigureOptions;
 using TBot.Core.Stores;
 
 namespace TBot.Client.Services.CallLimiter;

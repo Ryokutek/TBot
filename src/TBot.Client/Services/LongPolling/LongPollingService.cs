@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
+using TBot.Core.ConfigureOptions;
 using TBot.Core.LongPolling;
-using TBot.Core.Options;
-using TBot.Core.Parameters;
+using TBot.Core.RequestOptions;
 using TBot.Core.TBot;
 using TBot.Core.TBot.RequestIdentification;
 using TBot.Core.Telegram;

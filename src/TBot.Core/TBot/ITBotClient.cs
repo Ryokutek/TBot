@@ -1,5 +1,5 @@
 using TBot.Core.HttpRequests;
-using TBot.Core.Parameters;
+using TBot.Core.RequestOptions;
 using TBot.Core.Telegram;
 
 namespace TBot.Core.TBot;

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using TBot.Client.Telegram;
-using TBot.Core.Options;
+using TBot.Core.ConfigureOptions;
 using TBot.Core.TBot.RequestIdentification;
 using TBot.Core.Telegram;
 using TBot.Core.UpdateEngine;

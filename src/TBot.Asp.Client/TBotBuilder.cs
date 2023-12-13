@@ -8,9 +8,9 @@ using TBot.Client.Services.UpdateEngine;
 using TBot.Client.Stores;
 using TBot.Core.Builders;
 using TBot.Core.CallLimiter;
+using TBot.Core.ConfigureOptions;
 using TBot.Core.HttpRequests;
 using TBot.Core.LongPolling;
-using TBot.Core.Options;
 using TBot.Core.Stores;
 using TBot.Core.TBot;
 using TBot.Core.UpdateEngine;
@@ -41,11 +41,11 @@ public class TBotBuilder
         return this;
     }
 
-    public TBotBuilder AddTBotStore(TBotStoreType storeType)
+    public TBotBuilder AddTBotStore(BotStoreType storeType)
     {
         switch (storeType)
         {
-            case TBotStoreType.Redis:
+            case BotStoreType.Redis:
                 _serviceCollection.AddTransient<ITBotStore, RedisTBotStore>();
                 break;
             default:

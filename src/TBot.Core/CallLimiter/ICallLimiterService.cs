@@ -1,4 +1,4 @@
-using TBot.Core.Options;
+using TBot.Core.ConfigureOptions;
 
 namespace TBot.Core.CallLimiter;
 
