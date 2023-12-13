@@ -1,8 +1,7 @@
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using TBot.Client.Utilities;
-using TBot.Core.CallLimiter;
-using TBot.Core.Options;
+using TBot.Core.ConfigureOptions;
 using TBot.Core.Stores;
 
 namespace TBot.Client.Stores;

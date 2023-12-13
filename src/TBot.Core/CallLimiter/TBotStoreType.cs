@@ -1,6 +1,6 @@
 ﻿namespace TBot.Core.CallLimiter;
 
-public enum TBotStoreType
+public enum BotStoreType
 {
     Redis
 }

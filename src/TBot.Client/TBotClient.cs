@@ -2,9 +2,9 @@ using System.Text.Json;
 using Microsoft.Extensions.Options;
 using TBot.Client.Telegram;
 using TBot.Core.CallLimiter;
+using TBot.Core.ConfigureOptions;
 using TBot.Core.HttpRequests;
-using TBot.Core.Options;
-using TBot.Core.Parameters;
+using TBot.Core.RequestOptions;
 using TBot.Core.TBot;
 using TBot.Core.Telegram;
 using TBot.Dto.Responses;
@@ -33,18 +33,28 @@ public class TBotClient : ITBotClient
         _requestService = requestService;
         _callLimitService = callLimitService;
     }
-    
-    public Task<Response<Message>> SendMessageAsync(SendMessageParameters parameters)
+
+    public Task<Response<Message>> SendVideoAsync(SendVideoOptions options)
     {
-        var request = RequestDescriptor.Create(HttpMethod.Post, "/sendMessage", parameters.ToParameters().ToList());
-        return SendAsync<Message, MessageDto>(request, dto => dto.ToDomain());
+        var request = RequestDescriptor.CreatePost(
+            "/sendVideo", 
+            options.ToParameters().ToList(),
+            contents: options.GetContents().ToList());
+        
+        return SendAsync<Message, MessageDto>(request, Converter.ToDomain);
     }
 
-    public Task<Response<List<Update>>> GetUpdateAsync(GetUpdateParameters parameters)
+    public Task<Response<Message>> SendMessageAsync(SendMessageOptions options)
     {
-        var request = RequestDescriptor.Create(HttpMethod.Post, "/getUpdates", parameters.ToParameters().ToList());
+        var request = RequestDescriptor.CreatePost("/sendMessage", options.ToParameters().ToList());
+        return SendAsync<Message, MessageDto>(request, Converter.ToDomain);
+    }
+
+    public Task<Response<List<Update>>> GetUpdateAsync(GetUpdateOptions options)
+    {
+        var request = RequestDescriptor.CreatePost("/getUpdates", options.ToParameters().ToList());
         return SendAsync<List<Update>, List<UpdateDto>>(request, 
-            dtoList => dtoList.Select(x=>x.ToDomain()).ToList());
+            dtoList => dtoList.Select(Converter.ToDomain).ToList());
     }
     
     public async Task<Response<TResponseDomain>> SendAsync<TResponseDomain, TResponseDto>(

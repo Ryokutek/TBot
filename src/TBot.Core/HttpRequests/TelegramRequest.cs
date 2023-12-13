@@ -1,4 +1,6 @@
-﻿namespace TBot.Core.HttpRequests;
+﻿using TBot.Core.TBot;
+
+namespace TBot.Core.HttpRequests;
 
 public class TelegramRequest
 {
@@ -32,18 +34,39 @@ public class TelegramRequest
         var httpRequestMessage = new HttpRequestMessage();
         var uriBuilder = new UriBuilder(GetBaseUrl(_token) + _requestDescriptor.Endpoint);
         
-        if (_requestDescriptor.Headers.Count > 0) 
+        foreach (var parameter in _requestDescriptor.Headers)
         {
-            foreach (var parameter in _requestDescriptor.Headers)
-            {
-                httpRequestMessage.Headers.TryAddWithoutValidation(parameter.Key, parameter.Value);
-            }
+            httpRequestMessage.Headers.TryAddWithoutValidation(parameter.Key, parameter.Value);
         }
+
+        if (_requestDescriptor.Contents.Any()) {
+            httpRequestMessage.Content = BuildHttpContent();
+        }
+
+        uriBuilder.Query = string.Join("&", _requestDescriptor.QueryParameters
+            .Select(x => $"{x.Key}={x.Value}"));
         
-        uriBuilder.Query = string.Join("&", _requestDescriptor.QueryParameters.Select(x => $"{x.Key}={x.Value}"));
         httpRequestMessage.RequestUri = new Uri(uriBuilder.Uri.AbsoluteUri);
         httpRequestMessage.Method = _requestDescriptor.Method;
-        
         return httpRequestMessage;
+    }
+
+    private HttpContent BuildHttpContent()
+    {
+        var multipartFormDataContent = new MultipartFormDataContent();
+        foreach (var content in _requestDescriptor.Contents)
+        {
+            switch (content.MediaType)
+            {
+                case ContentHeaders.MultipartFormData:
+                    multipartFormDataContent.Add(new StreamContent((Stream)content.Value), "video", $"TBot.{Guid.NewGuid()}");
+                    break;
+                case ContentHeaders.TextPlain:
+                    multipartFormDataContent.Add(new StringContent((content.Value as string)!), content.Name);
+                    break;
+            }
+        }
+
+        return multipartFormDataContent;
     }
 }
