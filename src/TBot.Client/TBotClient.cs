@@ -34,25 +34,27 @@ public class TBotClient : ITBotClient
         _callLimitService = callLimitService;
     }
 
+    public Task<Response<Message>> SendPhotoAsync(SendVideoOptions options)
+    {
+        var request = RequestDescriptor.CreatePost("/sendPhoto", options);
+        return SendAsync<Message, MessageDto>(request, Converter.ToDomain);
+    }
+    
     public Task<Response<Message>> SendVideoAsync(SendVideoOptions options)
     {
-        var request = RequestDescriptor.CreatePost(
-            "/sendVideo", 
-            options.ToParameters().ToList(),
-            contents: options.GetContents().ToList());
-        
+        var request = RequestDescriptor.CreatePost("/sendVideo", options);
         return SendAsync<Message, MessageDto>(request, Converter.ToDomain);
     }
 
     public Task<Response<Message>> SendMessageAsync(SendMessageOptions options)
     {
-        var request = RequestDescriptor.CreatePost("/sendMessage", options.ToParameters().ToList());
+        var request = RequestDescriptor.CreatePost("/sendMessage", options);
         return SendAsync<Message, MessageDto>(request, Converter.ToDomain);
     }
 
     public Task<Response<List<Update>>> GetUpdateAsync(GetUpdateOptions options)
     {
-        var request = RequestDescriptor.CreatePost("/getUpdates", options.ToParameters().ToList());
+        var request = RequestDescriptor.CreatePost("/getUpdates", options);
         return SendAsync<List<Update>, List<UpdateDto>>(request, 
             dtoList => dtoList.Select(Converter.ToDomain).ToList());
     }

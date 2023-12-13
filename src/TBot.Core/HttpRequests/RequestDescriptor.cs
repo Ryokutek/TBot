@@ -1,4 +1,5 @@
 ﻿using TBot.Core.HttpRequests.Models;
+using TBot.Core.RequestOptions.Structure;
 
 namespace TBot.Core.HttpRequests;
 
@@ -22,6 +23,11 @@ public class RequestDescriptor
         Headers = headers;
         QueryParameters = queryParameters;
         Contents = contents;
+    }
+    
+    public static RequestDescriptor CreatePost(string endpoint, BaseOptions options)
+    {
+        return Create(HttpMethod.Post, endpoint, options.ToParameters().ToList(), contents: options.GetContents().ToList());
     }
     
     public static RequestDescriptor CreatePost(
