@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
 using TBot.Core.HttpRequests.Models;
-using TBot.Core.RequestOptions.InputFileParameters;
+using TBot.Core.RequestOptions.Inputs;
 
 namespace TBot.Core.RequestOptions.Structure;
 
 public class BaseOptions
 {
-    public IEnumerable<QueryParameter> ToParameters()
+    public virtual IEnumerable<QueryParameter> ToParameters()
     {
         foreach (var parameter in GetParameters<QueryParameterAttribute>())
         {
@@ -25,7 +25,7 @@ public class BaseOptions
         }
     }
     
-    public IEnumerable<Content> GetContents()
+    public virtual IEnumerable<Content> GetContents()
     {
         foreach (var parameter in GetParameters<ContentParameterAttribute>())
         {
@@ -42,7 +42,7 @@ public class BaseOptions
         }
     }
 
-    private IEnumerable<Parameter<T>> GetParameters<T>() where T : Attribute
+    protected IEnumerable<Parameter<T>> GetParameters<T>() where T : Attribute
     {
         var options = GetType();
         foreach (var property in options.GetProperties())
@@ -71,7 +71,7 @@ public class BaseOptions
         }
     }
     
-    private static bool IsDefaultValue(object? value)
+    protected virtual bool IsDefaultValue(object? value)
     {
         return value switch
         {

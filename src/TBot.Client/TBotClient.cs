@@ -5,6 +5,7 @@ using TBot.Core.CallLimiter;
 using TBot.Core.ConfigureOptions;
 using TBot.Core.HttpRequests;
 using TBot.Core.RequestOptions;
+using TBot.Core.RequestOptions.Structure;
 using TBot.Core.TBot;
 using TBot.Core.Telegram;
 using TBot.Dto.Responses;
@@ -34,24 +35,34 @@ public class TBotClient : ITBotClient
         _callLimitService = callLimitService;
     }
 
+    public Task<Response<List<Message>>> SendMediaGroupAsync(SendMediaGroupOptions options)
+    {
+        var request = RequestDescriptor.CreatePost("/sendMediaGroup", options);
+        return SendAsync<List<Message>, List<MessageDto>>(request, 
+            dtoList => dtoList.Select(Converter.ToDomain).ToList());
+    }
+    
     public Task<Response<Message>> SendPhotoAsync(SendVideoOptions options)
     {
-        var request = RequestDescriptor.CreatePost("/sendPhoto", options);
-        return SendAsync<Message, MessageDto>(request, Converter.ToDomain);
+        return SendBaseRequestAsync("/sendPhoto", options);
     }
     
     public Task<Response<Message>> SendVideoAsync(SendVideoOptions options)
     {
-        var request = RequestDescriptor.CreatePost("/sendVideo", options);
-        return SendAsync<Message, MessageDto>(request, Converter.ToDomain);
+        return SendBaseRequestAsync("/sendVideo", options);
     }
 
     public Task<Response<Message>> SendMessageAsync(SendMessageOptions options)
     {
-        var request = RequestDescriptor.CreatePost("/sendMessage", options);
-        return SendAsync<Message, MessageDto>(request, Converter.ToDomain);
+        return SendBaseRequestAsync("/sendMessage", options);
     }
 
+    private Task<Response<Message>> SendBaseRequestAsync(string endpoint, BaseOptions options)
+    {
+        var request = RequestDescriptor.CreatePost(endpoint, options);
+        return SendAsync<Message, MessageDto>(request, Converter.ToDomain);
+    }
+    
     public Task<Response<List<Update>>> GetUpdateAsync(GetUpdateOptions options)
     {
         var request = RequestDescriptor.CreatePost("/getUpdates", options);
@@ -63,6 +74,10 @@ public class TBotClient : ITBotClient
         RequestDescriptor request, Func<TResponseDto, TResponseDomain> convertor) where TResponseDomain : new()
     {
         var response = await SendAsync(request);
+        if (!response.IsSuccessStatusCode) {
+            var reason = await response.Content.ReadAsStringAsync();
+        }
+        
         var responseSteam = await response.Content.ReadAsStreamAsync();
         var responseDto = await JsonSerializer.DeserializeAsync<ResponseDto<TResponseDto>>(responseSteam);
 
