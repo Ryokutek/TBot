@@ -1,7 +1,7 @@
 ﻿using TBot.Core.RequestOptions.ReplyMarkupParameters;
 using TBot.Core.RequestOptions.Structure;
 using TBot.Core.Telegram;
-using InputFile = TBot.Core.RequestOptions.InputFileParameters.InputFile;
+using InputFile = TBot.Core.RequestOptions.Inputs.InputFile;
 
 namespace TBot.Core.RequestOptions;
 

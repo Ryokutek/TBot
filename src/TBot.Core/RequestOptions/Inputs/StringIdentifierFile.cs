@@ -1,6 +1,6 @@
 using TBot.Core.TBot;
 
-namespace TBot.Core.RequestOptions.InputFileParameters;
+namespace TBot.Core.RequestOptions.Inputs;
 
 public class StringIdentifierFile : InputFile
 {

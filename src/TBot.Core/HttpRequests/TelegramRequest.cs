@@ -59,7 +59,7 @@ public class TelegramRequest
             switch (content.MediaType)
             {
                 case ContentHeaders.MultipartFormData:
-                    multipartFormDataContent.Add(new StreamContent((Stream)content.Value), "video", $"TBot.{Guid.NewGuid()}");
+                    multipartFormDataContent.Add(new StreamContent((Stream)content.Value), content.Name, $"TBot.{Guid.NewGuid()}");
                     break;
                 case ContentHeaders.TextPlain:
                     multipartFormDataContent.Add(new StringContent((content.Value as string)!), content.Name);
