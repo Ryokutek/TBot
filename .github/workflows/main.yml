@@ -1,7 +1,7 @@
 name: Processing Libraries
 on: 
   push: 
-    branches: [master]
+    branches: [main]
 jobs:
   nuget:
     runs-on: ryokutek-raspberrypi
