@@ -1,0 +1,36 @@
+name: Processing Libraries
+on: 
+  push: 
+    branches: [master]
+jobs:
+  nuget:
+    runs-on: ryokutek-raspberrypi
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Build
+      run: /lib/dotnet/dotnet build -c Release
+    - name: Pack Setup
+      run: /lib/dotnet/dotnet nuget add source https://packages.gusmelford.com/v3/index.json -n GusMelford -u ${{ secrets.NUGET_USERNAME }} -p ${{ secrets.NUGET_PASSWORD }} --store-password-in-clear-text
+      continue-on-error: true
+    - name: Pack
+      run: /lib/dotnet/dotnet pack
+    - name: Publish
+      run: /lib/dotnet/dotnet nuget push ./nupkgs/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source https://packages.gusmelford.com/v3/index.json --skip-duplicate
+  notify:
+    needs: [nuget]
+    runs-on: ryokutek-raspberrypi
+    steps:
+    - name: Send Telegram Notify
+      run: |
+        curl -X POST \
+          -H "Content-Type: application/json" \
+          -d '{
+            "chat_id": "${{secrets.TELEGRAM_CHAT_STATUS}}",
+            "text": " ${{ github.actor }} published TBot.
+            
+            Commit message: ${{ github.event.commits[0].message }}
+            Repository: ${{ github.repository }}
+            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}"
+          }' \
+          https://api.telegram.org/bot${{secrets.TELEGRAM_TOKEN}}/sendMessage
