@@ -12,7 +12,7 @@ using TBot.Core.Telegram;
 using TBot.Core.UpdateEngine;
 using TBot.Dto.Updates;
 
-namespace TBot.Client.Asp;
+namespace TBot.Asp.Client;
 
 // ReSharper disable once InconsistentNaming
 public class TBotRouteBuilder

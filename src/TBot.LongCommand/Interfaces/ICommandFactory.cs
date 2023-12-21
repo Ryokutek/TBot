@@ -1,6 +1,6 @@
-﻿using TBot.Command.Abstractions;
+﻿using TBot.LongCommand.Abstractions;
 
-namespace TBot.Command.Interfaces;
+namespace TBot.LongCommand.Interfaces;
 
 public interface ICommandFactory
 {

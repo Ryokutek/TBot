@@ -1,6 +1,6 @@
-﻿using TBot.Command.Abstractions;
+﻿using TBot.LongCommand.Abstractions;
 
-namespace TBot.Command.Builder;
+namespace TBot.LongCommand.Builder;
 
 public class CommandConstructor
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TBot.Command.Interfaces;
+using TBot.LongCommand.Interfaces;
 
-namespace TBot.Command.Abstractions;
+namespace TBot.LongCommand.Abstractions;
 
 public class CommandFactory : ICommandFactory, IDisposable
 {

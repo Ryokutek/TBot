@@ -1,6 +1,6 @@
 ﻿using TBot.Core.TBot.RequestIdentification;
 
-namespace TBot.Command.Domain;
+namespace TBot.LongCommand.Domain;
 
 public class CommandStoreState
 {

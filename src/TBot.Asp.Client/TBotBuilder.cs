@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TBot.Client;
 using TBot.Client.Services.CallLimiter;
 using TBot.Client.Services.HttpRequests;
 using TBot.Client.Services.LongPolling;
@@ -15,7 +16,7 @@ using TBot.Core.Stores;
 using TBot.Core.TBot;
 using TBot.Core.UpdateEngine;
 
-namespace TBot.Client.Asp;
+namespace TBot.Asp.Client;
 
 // ReSharper disable once InconsistentNaming
 public class TBotBuilder

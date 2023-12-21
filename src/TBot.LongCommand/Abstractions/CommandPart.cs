@@ -1,6 +1,6 @@
-﻿using TBot.Command.Domain;
+﻿using TBot.LongCommand.Domain;
 
-namespace TBot.Command.Abstractions;
+namespace TBot.LongCommand.Abstractions;
 
 public abstract class CommandPart
 {

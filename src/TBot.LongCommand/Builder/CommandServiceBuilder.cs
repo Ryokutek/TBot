@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TBot.Command.Abstractions;
-using TBot.Command.Interfaces;
 using TBot.Core.Builders;
+using TBot.LongCommand.Abstractions;
+using TBot.LongCommand.Interfaces;
 
-namespace TBot.Command.Builder;
+namespace TBot.LongCommand.Builder;
 
 public class CommandServiceBuilder
 {

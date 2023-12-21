@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace TBot.Command.Domain;
+namespace TBot.LongCommand.Domain;
 
 public class CommandContainer
 {

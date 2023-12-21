@@ -1,4 +1,4 @@
-﻿namespace TBot.Command.Domain;
+﻿namespace TBot.LongCommand.Domain;
 
 public class ExecuteCommandResult
 {

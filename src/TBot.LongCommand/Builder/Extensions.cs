@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TBot.Command.Interfaces;
 using TBot.Core.Builders;
+using TBot.LongCommand.Interfaces;
 
-namespace TBot.Command.Builder;
+namespace TBot.LongCommand.Builder;
 
 public static class Extensions
 {

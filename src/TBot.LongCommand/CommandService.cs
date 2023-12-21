@@ -1,9 +1,9 @@
-﻿using TBot.Command.Abstractions;
-using TBot.Command.Domain;
-using TBot.Command.Interfaces;
-using TBot.Core.UpdateEngine;
+﻿using TBot.Core.UpdateEngine;
+using TBot.LongCommand.Abstractions;
+using TBot.LongCommand.Domain;
+using TBot.LongCommand.Interfaces;
 
-namespace TBot.Command;
+namespace TBot.LongCommand;
 
 public class CommandService : UpdatePipeline
 {

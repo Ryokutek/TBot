@@ -1,4 +1,4 @@
-﻿namespace TBot.Command.Abstractions;
+﻿namespace TBot.LongCommand.Abstractions;
 
 public class CommandPartModel
 {

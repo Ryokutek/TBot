@@ -1,7 +1,7 @@
-﻿using TBot.Command.Domain;
-using TBot.Core.TBot.RequestIdentification;
+﻿using TBot.Core.TBot.RequestIdentification;
+using TBot.LongCommand.Domain;
 
-namespace TBot.Command.Interfaces;
+namespace TBot.LongCommand.Interfaces;
 
 public interface ICommandStoreService
 {

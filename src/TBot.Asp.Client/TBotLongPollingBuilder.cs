@@ -3,7 +3,7 @@ using TBot.Core.LongPolling;
 using TBot.Core.Telegram;
 using TBot.Core.UpdateEngine;
 
-namespace TBot.Client.Asp;
+namespace TBot.Asp.Client;
 
 // ReSharper disable once InconsistentNaming
 public class TBotLongPollingBuilder

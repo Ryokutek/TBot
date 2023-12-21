@@ -2,7 +2,7 @@
 using TBot.Core.Telegram;
 using TBot.Core.UpdateEngine;
 
-namespace TBot.Command.Domain;
+namespace TBot.LongCommand.Domain;
 
 public class CommandContext : Context
 {
