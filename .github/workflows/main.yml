@@ -1,7 +1,7 @@
 name: Processing Libraries
 on: 
   push: 
-    branches: [master]
+    branches: [main]
 jobs:
   nuget:
     runs-on: ryokutek-raspberrypi
@@ -16,7 +16,7 @@ jobs:
     - name: Pack
       run: /lib/dotnet/dotnet pack
     - name: Publish
-      run: /lib/dotnet/dotnet nuget push ./nupkgs/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source https://packages.gusmelford.com/v3/index.json --skip-duplicate
+      run: /lib/dotnet/dotnet nuget push ./src/nupkgs/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source https://packages.gusmelford.com/v3/index.json --skip-duplicate
   notify:
     needs: [nuget]
     runs-on: ryokutek-raspberrypi
