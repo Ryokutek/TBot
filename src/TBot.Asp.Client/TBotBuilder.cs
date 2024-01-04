@@ -42,18 +42,32 @@ public class TBotBuilder
         return this;
     }
 
-    public TBotBuilder AddTBotStore(BotStoreType storeType)
+    public TBotBuilder AddRedisStore(string connectionString)
     {
-        switch (storeType)
+        _serviceCollection.Configure<RedisOptions>(options =>
         {
-            case BotStoreType.Redis:
-                _serviceCollection.AddTransient<ITBotStore, RedisTBotStore>();
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(storeType), storeType, null);
-        }
-
+            options.ConnectionString = connectionString;
+        });
+        AddRedisService();
         return this;
+    }
+    
+    public TBotBuilder AddRedisStore(RedisOptions redisOptions)
+    {
+        _serviceCollection.Configure<RedisOptions>(options =>
+        {
+            options.Host = redisOptions.Host;
+            options.Password = redisOptions.Password;
+            options.DefaultDatabase = redisOptions.DefaultDatabase;
+            options.SyncTimeout = redisOptions.SyncTimeout;
+        });
+        AddRedisService();
+        return this;
+    }
+
+    private void AddRedisService()
+    {
+        _serviceCollection.AddTransient<ITBotStore, RedisTBotStore>();
     }
     
     public TBotBuilder AddLongPoll()
@@ -71,7 +85,6 @@ public class TBotBuilder
     private void ConfigureOptions()
     {
         _serviceCollection.AddOptions<TBotOptions>(_configuration, TBotOptions.OptionsName);
-        _serviceCollection.AddOptions<RedisOptions>(_configuration, $"{TBotOptions.OptionsName}:{RedisOptions.OptionsName}");
         _serviceCollection.AddOptions<CallLimiterOptions>(_configuration, $"{TBotOptions.OptionsName}:{CallLimiterOptions.OptionsName}");
         _serviceCollection.AddOptions<UpdateOptions>(_configuration, $"{TBotOptions.OptionsName}:{UpdateOptions.OptionsName}");
     }
