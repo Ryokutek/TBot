@@ -6,6 +6,7 @@ namespace TBot.Core.TBot;
 
 public interface ITBotClient
 {
+    Task<Response<Message>> DeleteMessageAsync(DeleteMessageOptions options);
     Task<Response<List<Message>>> SendMediaGroupAsync(SendMediaGroupOptions options);
     Task<Response<Message>> SendPhotoAsync(SendVideoOptions options);
     Task<Response<Message>> SendVideoAsync(SendVideoOptions options);

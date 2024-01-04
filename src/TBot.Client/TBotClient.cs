@@ -52,6 +52,11 @@ public class TBotClient : ITBotClient
         return SendBaseRequestAsync("/sendVideo", options);
     }
 
+    public Task<Response<Message>> DeleteMessageAsync(DeleteMessageOptions options)
+    {
+        return SendBaseRequestAsync("/deleteMessage", options);
+    }
+    
     public Task<Response<Message>> SendMessageAsync(SendMessageOptions options)
     {
         return SendBaseRequestAsync("/sendMessage", options);
