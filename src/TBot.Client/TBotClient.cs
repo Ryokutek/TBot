@@ -74,10 +74,6 @@ public class TBotClient : ITBotClient
         RequestDescriptor request, Func<TResponseDto, TResponseDomain> convertor) where TResponseDomain : new()
     {
         var response = await SendAsync(request);
-        if (!response.IsSuccessStatusCode) {
-            var reason = await response.Content.ReadAsStringAsync();
-        }
-        
         var responseSteam = await response.Content.ReadAsStreamAsync();
         var responseDto = await JsonSerializer.DeserializeAsync<ResponseDto<TResponseDto>>(responseSteam);
 
