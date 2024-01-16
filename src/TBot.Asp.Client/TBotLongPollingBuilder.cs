@@ -25,9 +25,14 @@ public class TBotLongPollingBuilder
     public IServiceProvider WithUpdateEngine(CancellationToken? cancellationToken = null)
     {
         var longPollingService = _serviceProvider.GetRequiredService<ILongPollingService>();
-        var updateEngineService = _serviceProvider.GetRequiredService<IUpdateEngineService>();
         
-        longPollingService.Start(async update => await updateEngineService.StartAsync(update), cancellationToken);
+        longPollingService.Start(async update =>
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var updateEngineService = scope.ServiceProvider.GetRequiredService<IUpdateEngineService>();
+            await updateEngineService.StartAsync(update);
+        }, cancellationToken);
+        
         return _serviceProvider;
     }
 }
