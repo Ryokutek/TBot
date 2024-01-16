@@ -19,6 +19,7 @@ public class UpdateEngineService : IUpdateEngineService
 
     public async Task StartAsync(Update update)
     {
+        _logger.LogInformation("UpdateEngine. New update. UpdateId: {UpdateId}", update.UpdateId);
         if (!_pipelines.Any()) {
             return;
         }

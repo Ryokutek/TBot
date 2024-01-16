@@ -78,7 +78,7 @@ public class TBotBuilder
 
     public UpdateEngineBuilder AddUpdateServices()
     {
-        _serviceCollection.AddTransient<IUpdateEngineService, UpdateEngineService>();
+        _serviceCollection.AddScoped<IUpdateEngineService, UpdateEngineService>();
         return new UpdateEngineBuilder(_serviceCollection, _configuration);
     }
     
