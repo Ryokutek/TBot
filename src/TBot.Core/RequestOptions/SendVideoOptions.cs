@@ -7,8 +7,14 @@ namespace TBot.Core.RequestOptions;
 
 public class SendVideoOptions : BaseOptions
 {
+    public SendVideoOptions(ChatIdentifier chatId, InputFile video)
+    {
+        ChatId = chatId;
+        Video = video;
+    }
+    
     [QueryParameter("chat_id", Required = true)]
-    public ChatIdentifier ChatId { get; set; } = null!;
+    public ChatIdentifier ChatId { get; set; }
     
     [QueryParameter("message_thread_id")]
     public int MessageThreadId { get; set; }

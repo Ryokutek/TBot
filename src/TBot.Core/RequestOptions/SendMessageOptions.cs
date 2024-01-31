@@ -6,14 +6,20 @@ namespace TBot.Core.RequestOptions;
 
 public class SendMessageOptions : BaseOptions
 {
+    public SendMessageOptions(ChatIdentifier chatId, string text)
+    {
+        ChatId = chatId;
+        Text = text;
+    }
+    
     [QueryParameter("chat_id", Required = true)]
-    public ChatIdentifier ChatId { get; set; } = null!;
+    public ChatIdentifier ChatId { get; set; }
     
     [QueryParameter("message_thread_id")]
     public int MessageThreadId { get; set; }
 
     [QueryParameter("text", Required = true)]
-    public string Text { get; set; } = null!;
+    public string Text { get; set; }
     
     [QueryParameter("parse_mode")]
     public ParseMode? ParseMode { get; set; }

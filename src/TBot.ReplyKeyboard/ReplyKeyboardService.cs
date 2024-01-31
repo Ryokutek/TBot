@@ -97,11 +97,9 @@ public class ReplyKeyboardService : UpdatePipeline
     private async Task SendKeyboardAsync(ChatIdentifier chatIdentifier, ReplyKeyboardModel keyboardModel)
     {
         var replyKeyboard = BuildReplyKeyboard(keyboardModel);
-        await _tBotClient.SendMessageAsync(new SendMessageOptions
+        await _tBotClient.SendMessageAsync(new SendMessageOptions(chatIdentifier, keyboardModel.Name)
         {
-            Text = keyboardModel.Name,
-            ReplyMarkup = replyKeyboard,
-            ChatId = chatIdentifier
+            ReplyMarkup = replyKeyboard
         });
     }
 

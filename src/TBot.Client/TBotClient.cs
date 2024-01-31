@@ -52,9 +52,16 @@ public class TBotClient : ITBotClient
         return SendBaseRequestAsync("/sendVideo", options);
     }
 
-    public Task<Response<Message>> DeleteMessageAsync(DeleteMessageOptions options)
+    public Task<Response<bool>> DeleteMessagesAsync(DeleteMessagesOptions options)
     {
-        return SendBaseRequestAsync("/deleteMessage", options);
+        var request = RequestDescriptor.CreatePost("/deleteMessages", options);
+        return SendAsync<bool, bool>(request, b => b);
+    }
+    
+    public Task<Response<bool>> DeleteMessageAsync(DeleteMessageOptions options)
+    {
+        var request = RequestDescriptor.CreatePost("/deleteMessage", options);
+        return SendAsync<bool, bool>(request, b => b);
     }
     
     public Task<Response<Message>> SendMessageAsync(SendMessageOptions options)
@@ -76,7 +83,7 @@ public class TBotClient : ITBotClient
     }
     
     public async Task<Response<TResponseDomain>> SendAsync<TResponseDomain, TResponseDto>(
-        RequestDescriptor request, Func<TResponseDto, TResponseDomain> convertor) where TResponseDomain : new()
+        RequestDescriptor request, Func<TResponseDto, TResponseDomain> convertor)
     {
         var response = await SendAsync(request);
         var responseSteam = await response.Content.ReadAsStreamAsync();
@@ -88,7 +95,7 @@ public class TBotClient : ITBotClient
 
         return Response<TResponseDomain>.Create(
             responseDto.StatusOk,
-            convertor(responseDto.Result!),
+            responseDto.Result is null ? default : convertor(responseDto.Result!),
             responseDto.Description,
             responseDto.ErrorCode,
             responseDto.ResponseParameters?.ToDomain());

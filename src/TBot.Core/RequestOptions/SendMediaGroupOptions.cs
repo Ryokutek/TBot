@@ -7,14 +7,20 @@ namespace TBot.Core.RequestOptions;
 
 public class SendMediaGroupOptions : BaseOptions
 {
+    public SendMediaGroupOptions(ChatIdentifier chatId, List<InputMedia> mediaSet)
+    {
+        ChatId = chatId;
+        MediaSet = mediaSet;
+    }
+    
     [QueryParameter("chat_id", Required = true)]
-    public ChatIdentifier ChatId { get; set; } = null!;
+    public ChatIdentifier ChatId { get; set; }
     
     [QueryParameter("message_thread_id")]
     public int MessageThreadId { get; set; }
 
     [QueryParameter("media", IsJson = true)]
-    public List<InputMedia> MediaSet { get; set; } = null!;
+    public List<InputMedia> MediaSet { get; set; }
     
     [QueryParameter("disable_notification")]
     public bool DisableNotification { get; set; }

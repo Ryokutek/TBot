@@ -43,7 +43,7 @@ public class TBotRouteBuilder
     {
         using var scope = _endpointRouteBuilder.ServiceProvider.CreateScope();
         var pattern = scope.ServiceProvider.GetRequiredService<IOptionsSnapshot<TBotOptions>>().Value.UpdatePath;
-        var updateEngineService = _endpointRouteBuilder.ServiceProvider.GetRequiredService<IUpdateEngineService>();
+        var updateEngineService = scope.ServiceProvider.GetRequiredService<IUpdateEngineService>();
         
         return UseTBot(_endpointRouteBuilder, pattern, _endpointRouteBuilder.ServiceProvider, 
             async (_, _, update) => await updateEngineService.StartAsync(update));

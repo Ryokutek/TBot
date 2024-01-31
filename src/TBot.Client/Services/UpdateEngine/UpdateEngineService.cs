@@ -19,6 +19,18 @@ public class UpdateEngineService : IUpdateEngineService
 
     public async Task StartAsync(Update update)
     {
+        try
+        {
+            await ExecuteAsync(update);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "UpdateEngine. Message processing error in pipeline A");
+        }
+    }
+
+    private async Task ExecuteAsync(Update update)
+    {
         _logger.LogInformation("UpdateEngine. New update. UpdateId: {UpdateId}", update.UpdateId);
         
         if (!_pipelines.Any()) {
@@ -26,12 +38,12 @@ public class UpdateEngineService : IUpdateEngineService
         }
         
         var updatePipelineMaster = new UpdatePipeline().SetNextPipeline(_pipelines.First());
-        for (int i = 1; i < _pipelines.Count; i++)
+        for (var i = 1; i < _pipelines.Count; i++)
         {
             updatePipelineMaster.SetNextPipeline(_pipelines[i]);
         }
         
-        var context = Context.Create(CurrentSessionThread.Session ?? throw new Exception(), update);
+        var context = Context.Create(CurrentSessionThread.Session ?? throw new Exception("Session not found"), update);
         await updatePipelineMaster.ExecuteAsync(context);
     }
 }

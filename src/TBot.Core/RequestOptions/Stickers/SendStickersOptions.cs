@@ -6,14 +6,20 @@ namespace TBot.Core.RequestOptions.Stickers;
 
 public class SendStickersOptions : BaseOptions
 {
+    public SendStickersOptions(ChatIdentifier chatId, InputFile sticker)
+    {
+        ChatId = chatId;
+        Sticker = sticker;
+    }
+    
     [QueryParameter("chat_id", Required = true)]
-    public ChatIdentifier ChatId { get; set; } = null!;
+    public ChatIdentifier ChatId { get; set; }
     
     [QueryParameter("message_thread_id")]
     public int MessageThreadId { get; set; }
 
     [QueryParameter("sticker", Required = true)]
-    public string Sticker { get; set; } = null!; //TODO: InputFile
+    public InputFile Sticker { get; set; }
     
     [QueryParameter("emoji")]
     public string Emoji { get; set; } = null!;

@@ -4,8 +4,13 @@ namespace TBot.Core.RequestOptions.Webhook;
 
 public class SetWebhookOptions : BaseOptions
 {
+    public SetWebhookOptions(string url)
+    {
+        Url = url;
+    }
+    
     [QueryParameter("url", Required = true)]
-    public string Url { get; set; } = null!;
+    public string Url { get; set; }
     
     /*[Parameter("certificate", Required = true)]
     public InputFile certificate { get; set; } = null!;*/

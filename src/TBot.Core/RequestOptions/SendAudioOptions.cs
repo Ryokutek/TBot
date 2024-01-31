@@ -1,15 +1,16 @@
+using TBot.Core.RequestOptions.Reply;
 using TBot.Core.RequestOptions.ReplyMarkupParameters;
 using TBot.Core.RequestOptions.Structure;
 using TBot.Core.Telegram;
 
 namespace TBot.Core.RequestOptions;
 
-public class SendPhotoOption : BaseOptions
+public class SendAudioOptions : BaseOptions
 {
-    public SendPhotoOption(ChatIdentifier chatId, InputFile photo)
+    public SendAudioOptions(ChatIdentifier chatId, InputFile audio)
     {
         ChatId = chatId;
-        Photo = photo;
+        Audio = audio;
     }
     
     [QueryParameter("chat_id", Required = true)]
@@ -18,8 +19,8 @@ public class SendPhotoOption : BaseOptions
     [QueryParameter("message_thread_id")]
     public int MessageThreadId { get; set; }
     
-    [ContentParameter("photo", Required = true)]
-    public InputFile Photo { get; set; }
+    [ContentParameter("audio", Required = true)]
+    public InputFile Audio { get; set; }
     
     [QueryParameter("caption")]
     public string? Caption { get; set; }
@@ -30,11 +31,17 @@ public class SendPhotoOption : BaseOptions
     [QueryParameter("caption_entities")]
     public List<MessageEntity>? CaptionEntities { get; set; }
     
-    [QueryParameter("has_spoiler")]
-    public bool? HasSpoiler { get; set; }
+    [QueryParameter("duration")]
+    public int? Duration { get; set; }
     
-    [QueryParameter("supports_streaming")]
-    public bool? SupportsStreaming { get; set; }
+    [QueryParameter("performer")]
+    public string? Performer { get; set; }
+    
+    [QueryParameter("title")]
+    public string? Title { get; set; }
+    
+    [ContentParameter("thumbnail")]
+    public InputFile? Thumbnail { get; set; }
     
     [QueryParameter("disable_notification")]
     public bool? DisableNotification { get; set; }
@@ -42,12 +49,10 @@ public class SendPhotoOption : BaseOptions
     [QueryParameter("protect_content")]
     public bool? ProtectContent { get; set; }
     
-    [QueryParameter("reply_to_message_id")]
-    public int? ReplyToMessageId { get; set; }
-    
-    [QueryParameter("allow_sending_without_reply")]
-    public bool? AllowSendingWithoutReply { get; set; }
+    [QueryParameter("reply_parameters")]
+    public ReplyParameters? ReplyParameters { get; set; }
     
     [QueryParameter("reply_markup")]
     public ReplyMarkup? ReplyMarkup { get; set; }
+    
 }
