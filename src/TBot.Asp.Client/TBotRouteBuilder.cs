@@ -43,10 +43,14 @@ public class TBotRouteBuilder
     {
         using var scope = _endpointRouteBuilder.ServiceProvider.CreateScope();
         var pattern = scope.ServiceProvider.GetRequiredService<IOptionsSnapshot<TBotOptions>>().Value.UpdatePath;
-        var updateEngineService = scope.ServiceProvider.GetRequiredService<IUpdateEngineService>();
         
         return UseTBot(_endpointRouteBuilder, pattern, _endpointRouteBuilder.ServiceProvider, 
-            async (_, _, update) => await updateEngineService.StartAsync(update));
+            async (_, serviceProvider, update) =>
+            {
+                await using var innerScope = serviceProvider.CreateAsyncScope();
+                var updateEngineService = innerScope.ServiceProvider.GetRequiredService<IUpdateEngineService>();
+                await updateEngineService.StartAsync(update);
+            });
     }
     
     private static IEndpointConventionBuilder UseTBot(
