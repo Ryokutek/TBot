@@ -37,10 +37,11 @@ public class UpdateEngineService : IUpdateEngineService
             return;
         }
         
-        var updatePipelineMaster = new UpdatePipeline().SetNextPipeline(_pipelines.First());
+        var updatePipelineMaster = _pipelines.First();
+        var pipelineAdder = updatePipelineMaster;
         for (var i = 1; i < _pipelines.Count; i++)
         {
-            updatePipelineMaster.SetNextPipeline(_pipelines[i]);
+            pipelineAdder = pipelineAdder.SetNextPipeline(_pipelines[i]);
         }
         
         var context = Context.Create(CurrentSessionThread.Session ?? throw new Exception("Session not found"), update);

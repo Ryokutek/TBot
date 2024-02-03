@@ -64,13 +64,7 @@ public class CommandService : UpdatePipeline
     {
         container ??= new CommandContainer();
         var commandPart = GetCommandPart(descriptor, commandContext, container);
-
-        if (descriptor.State == CommandPartState.Action)
-        {
-            await commandPart.ExecuteActionRequestAsync();
-            descriptor.SetProcessState();
-        }
-
+        
         if (descriptor.State == CommandPartState.Process)
         {
             await commandPart.ExecuteProcessAnswerAsync();
@@ -80,6 +74,12 @@ public class CommandService : UpdatePipeline
                     return await ExecuteCommandAsync(descriptor, commandContext, container);
                 }
             }
+        }
+        
+        if (descriptor.State == CommandPartState.Action)
+        {
+            await commandPart.ExecuteActionRequestAsync();
+            descriptor.SetProcessState();
         }
         
         return new ExecuteCommandResult
