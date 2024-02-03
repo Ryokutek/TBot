@@ -10,6 +10,7 @@ public static class Extensions
     {
         updateEngineBuilder.AddService<CommandService>();
         updateEngineBuilder.Services.AddTransient<ICommandStoreService, CommandStoreService>();
+        updateEngineBuilder.Services.AddTransient<ILongCommandStoreService, CommandStoreService>();
         return new CommandServiceBuilder(updateEngineBuilder, updateEngineBuilder.Services);
     }
 }
