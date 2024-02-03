@@ -6,6 +6,7 @@ namespace TBot.LongCommand.Interfaces;
 
 public interface ICommandFactory
 {
-    CommandRepresentation? GetCommandIfExists(Update update);
+    bool TryGetCommandByTrigger(Update update, out CommandRepresentation? commandRepresentation);
+    bool TryGetCommandByIdentifier(string commandIdentifier, out CommandRepresentation? commandRepresentation);
     CommandPart CreateCommandPart(CommandRepresentation commandRepresentation, int partNumber);
 }

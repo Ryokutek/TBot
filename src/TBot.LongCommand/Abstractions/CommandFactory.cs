@@ -19,9 +19,16 @@ public class CommandFactory : ICommandFactory, IDisposable
         _serviceScope = serviceProvider.CreateScope();
     }
 
-    public CommandRepresentation? GetCommandIfExists(Update update)
+    public bool TryGetCommandByTrigger(Update update, out CommandRepresentation? commandRepresentation)
     {
-        return _commands.FirstOrDefault(x => x.CommandTrigger(update));
+        commandRepresentation = _commands.FirstOrDefault(x => x.CommandTrigger(update));
+        return commandRepresentation is not null;
+    }
+    
+    public bool TryGetCommandByIdentifier(string commandIdentifier, out CommandRepresentation? commandRepresentation)
+    {
+        commandRepresentation = _commands.FirstOrDefault(x => x.CommandIdentifier == commandIdentifier);
+        return commandRepresentation is not null;
     }
     
     public CommandPart CreateCommandPart(CommandRepresentation commandRepresentation, int partNumber)

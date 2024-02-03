@@ -28,19 +28,25 @@ internal class CommandService : UpdatePipeline
         
         var chatId = context.Update.Message!.From!.Id;
 
-        var isCommandActive = await _commandStoreService.IsCommandActiveAsync(chatId);
-        var commandRepresentation = _commandFactory.GetCommandIfExists(context.Update);
-        
-        if (commandRepresentation is null && !isCommandActive)
-            return await ExecuteNextAsync(context);
+        CommandDescriptor? commandDescriptor = null;
+        if (!_commandFactory.TryGetCommandByTrigger(context.Update, out var commandRepresentation))
+        {
+            if (await _commandStoreService.IsCommandActiveAsync(chatId))
+            {
+                commandDescriptor = await GetCommandDescriptorAsync(commandRepresentation!, chatId);
+                if (!_commandFactory.TryGetCommandByIdentifier(commandDescriptor.CommandIdentifier, out commandRepresentation))
+                { 
+                    return await ExecuteNextAsync(context);
+                }
+            }
+        }
         
         var commandContext = new CommandContext(context.Session, context.Update);
-        var commandDescriptor = await GetCommandDescriptorAsync(commandRepresentation!, chatId);
         var commandContainer = await _commandStoreService.GetCommandContainerAsync(commandContext.Session.ChatId);
         
-        var executedCommand = await ExecuteCommandAsync(commandRepresentation!, commandDescriptor, commandContext, commandContainer);
+        var executedCommand = await ExecuteCommandAsync(commandRepresentation!, commandDescriptor!, commandContext, commandContainer);
 
-        if (!commandDescriptor.IsCommandComplete()) {
+        if (!commandDescriptor!.IsCommandComplete()) {
             await _commandStoreService.SaveCommandAsync(context.Session, executedCommand.CommandDescriptor);
             await _commandStoreService.SaveCommandContainerAsync(commandContext.Session, executedCommand.CommandContainer);
         }
