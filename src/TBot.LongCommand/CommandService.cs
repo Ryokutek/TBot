@@ -5,7 +5,7 @@ using TBot.LongCommand.Interfaces;
 
 namespace TBot.LongCommand;
 
-public class CommandService : UpdatePipeline
+internal class CommandService : UpdatePipeline
 {
     private readonly ICommandFactory _commandFactory;
     private readonly ICommandStoreService _commandStoreService;

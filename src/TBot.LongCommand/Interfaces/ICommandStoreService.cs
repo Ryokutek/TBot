@@ -3,9 +3,8 @@ using TBot.LongCommand.Domain;
 
 namespace TBot.LongCommand.Interfaces;
 
-public interface ICommandStoreService
+internal interface ICommandStoreService : ILongCommandStoreService
 {
-    Task<bool> IsCommandActiveAsync(long chatId);
     Task<CommandDescriptor> GetCommandDescriptorAsync(long chatId);
     Task<CommandContainer?> GetCommandContainerAsync(long chatId);
     Task SaveCommandAsync(Session session, CommandDescriptor commandDescriptor);

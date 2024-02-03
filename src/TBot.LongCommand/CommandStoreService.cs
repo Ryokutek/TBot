@@ -5,7 +5,7 @@ using TBot.LongCommand.Interfaces;
 
 namespace TBot.LongCommand;
 
-public class CommandStoreService : ICommandStoreService
+internal class CommandStoreService : ICommandStoreService
 {
     private readonly ITBotStore _tBotStore;
 
@@ -17,9 +17,23 @@ public class CommandStoreService : ICommandStoreService
         _tBotStore = tBotStore;
     }
 
-    public Task<bool> IsCommandActiveAsync(long chatId)
+    public async Task<bool> IsCommandActiveAsync(long chatId, string? commandIdentifier)
     {
-        return _tBotStore.ContainsAsync(GetKey(chatId));
+        var isExists = await _tBotStore.ContainsAsync(GetKey(chatId));
+        if (!string.IsNullOrEmpty(commandIdentifier))
+        {
+            return await _tBotStore.ContainsAsync(GetKey(chatId));
+        }
+
+        if (isExists)
+        {
+            var command = await _tBotStore.GetAsync<CommandStoreState>(GetKey(chatId));
+            if (command?.CommandIdentifier == commandIdentifier) {
+                return true;
+            }
+        }
+
+        return false;
     }
     
     public async Task<CommandDescriptor> GetCommandDescriptorAsync(long chatId)
