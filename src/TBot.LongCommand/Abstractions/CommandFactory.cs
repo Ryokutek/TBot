@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using TBot.Core.Telegram;
+using TBot.LongCommand.Domain;
 using TBot.LongCommand.Interfaces;
 
 namespace TBot.LongCommand.Abstractions;
@@ -7,29 +9,24 @@ public class CommandFactory : ICommandFactory, IDisposable
 {
     private bool _disposed;
     private readonly IServiceScope _serviceScope;
-    private readonly Dictionary<string, SortedDictionary<int, CommandPartModel>> _commands;
+    private readonly List<CommandRepresentation> _commands;
 
     public CommandFactory(
         IServiceProvider serviceProvider, 
-        Dictionary<string, SortedDictionary<int, CommandPartModel>> commands)
+        List<CommandRepresentation> commands)
     {
         _commands = commands;
         _serviceScope = serviceProvider.CreateScope();
     }
 
-    public bool IsCommandExist(string name)
+    public CommandRepresentation? GetCommandIfExists(Update update)
     {
-        return _commands.ContainsKey(name);
+        return _commands.FirstOrDefault(x => x.CommandTrigger(update));
     }
     
-    public int GetTotalParts(string name)
+    public CommandPart CreateCommandPart(CommandRepresentation commandRepresentation, int partNumber)
     {
-        return _commands[name].Count;
-    }
-
-    public CommandPart CreateCommandPart(string name, int partNumber)
-    {
-        var type = _commands[name][partNumber].Type;
+        var type = commandRepresentation.CommandParts[partNumber].Type;
         return (CommandPart)ActivatorUtilities.CreateInstance(_serviceScope.ServiceProvider, type);
     }
     

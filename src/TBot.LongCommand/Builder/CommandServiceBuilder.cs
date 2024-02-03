@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TBot.Core.Builders;
+using TBot.Core.Telegram;
 using TBot.LongCommand.Abstractions;
+using TBot.LongCommand.Domain;
 using TBot.LongCommand.Interfaces;
 
 namespace TBot.LongCommand.Builder;
@@ -18,9 +20,9 @@ public class CommandServiceBuilder
         Services = serviceCollection;
     }
 
-    public CommandConstructor Add(string name)
+    public CommandConstructor Add(string commandIdentifier, Predicate<Update> commandTrigger)
     {
-        return new CommandConstructor(name, this);
+        return new CommandConstructor(commandIdentifier, commandTrigger, this);
     }
 
     internal CommandServiceBuilder Save(CommandConstructor commandConstructor)
@@ -33,12 +35,12 @@ public class CommandServiceBuilder
     {
         Services.AddTransient<ICommandFactory>(provider =>
         {
-            var commands = _commandConstructors
-                .ToDictionary(
-                    commandConstructor => commandConstructor.Name,
-                    commandConstructor => new SortedDictionary<int, CommandPartModel>(commandConstructor.Parts));
-
-            return new CommandFactory(provider, commands);
+            return new CommandFactory(provider, _commandConstructors.Select(x=>new CommandRepresentation
+            {
+                CommandIdentifier = x.CommandIdentifier,
+                CommandParts = new SortedDictionary<int, CommandPartModel>(x.Parts),
+                CommandTrigger = x.CommandTrigger
+            }).ToList());
         });
 
         return this;

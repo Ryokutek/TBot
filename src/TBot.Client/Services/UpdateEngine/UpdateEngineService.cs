@@ -25,7 +25,7 @@ public class UpdateEngineService : IUpdateEngineService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "UpdateEngine. Message processing error in pipeline A");
+            _logger.LogError(e, "UpdateEngine. Message processing error");
         }
     }
 

@@ -1,16 +1,19 @@
-﻿using TBot.LongCommand.Abstractions;
+﻿using TBot.Core.Telegram;
+using TBot.LongCommand.Abstractions;
 
 namespace TBot.LongCommand.Builder;
 
 public class CommandConstructor
 {
     private readonly CommandServiceBuilder _commandServiceBuilder;
-    public string Name { get; set; }
+    public string CommandIdentifier { get; set; }
+    public Predicate<Update> CommandTrigger { get; set; }
     public Dictionary<int, CommandPartModel> Parts { get; set; } = new ();
     
-    public CommandConstructor(string name, CommandServiceBuilder commandServiceBuilder)
+    public CommandConstructor(string commandIdentifier, Predicate<Update> commandTrigger, CommandServiceBuilder commandServiceBuilder)
     {
-        Name = name;
+        CommandIdentifier = commandIdentifier;
+        CommandTrigger = commandTrigger;
         _commandServiceBuilder = commandServiceBuilder;
     }
 

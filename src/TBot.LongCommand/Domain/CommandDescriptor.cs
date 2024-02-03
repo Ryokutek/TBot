@@ -2,14 +2,14 @@
 
 public class CommandDescriptor
 {
-    public string Name { get; private set; }
+    public string CommandIdentifier { get; private set; }
     public int PartNumber { get; private set; }
     public int TotalParts { get; private set; }
     public CommandPartState State { get; private set; }
 
-    private CommandDescriptor(string name, int partNumber, int totalParts, CommandPartState state)
+    private CommandDescriptor(string commandIdentifier, int partNumber, int totalParts, CommandPartState state)
     {
-        Name = name;
+        CommandIdentifier = commandIdentifier;
         PartNumber = partNumber;
         TotalParts = totalParts;
         State = state;

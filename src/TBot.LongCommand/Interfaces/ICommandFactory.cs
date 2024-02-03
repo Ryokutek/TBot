@@ -1,10 +1,11 @@
-﻿using TBot.LongCommand.Abstractions;
+﻿using TBot.Core.Telegram;
+using TBot.LongCommand.Abstractions;
+using TBot.LongCommand.Domain;
 
 namespace TBot.LongCommand.Interfaces;
 
 public interface ICommandFactory
 {
-    bool IsCommandExist(string name);
-    int GetTotalParts(string name);
-    CommandPart CreateCommandPart(string name, int partNumber);
+    CommandRepresentation? GetCommandIfExists(Update update);
+    CommandPart CreateCommandPart(CommandRepresentation commandRepresentation, int partNumber);
 }

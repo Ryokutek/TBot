@@ -29,7 +29,7 @@ public class CommandStoreService : ICommandStoreService
             throw new Exception($"Command state for {chatId} not found");
         }
         
-        return CommandDescriptor.Create(state.Name, state.PartNumber, state.TotalParts, state.PartState);
+        return CommandDescriptor.Create(state.CommandIdentifier, state.PartNumber, state.TotalParts, state.PartState);
     }
 
     public Task<CommandContainer?> GetCommandContainerAsync(long chatId)

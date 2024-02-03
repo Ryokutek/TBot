@@ -19,19 +19,26 @@ public class CommandService : UpdatePipeline
     }
 
     public override async Task<Context> ExecuteAsync(Context context)
-    { 
-        var commandName = context.Update.Message!.Text!;
-        var chatId = context.Update.Message.From!.Id;
+    {
+        if (context.Update.Message!.Text == "/cancel")
+        {
+            await _commandStoreService.ClearCommandAsync(context.Session);
+            return await ExecuteNextAsync(context);
+        }
+        
+        var chatId = context.Update.Message!.From!.Id;
 
         var isCommandActive = await _commandStoreService.IsCommandActiveAsync(chatId);
-        if (!_commandFactory.IsCommandExist(commandName) && !isCommandActive)
+        var commandRepresentation = _commandFactory.GetCommandIfExists(context.Update);
+        
+        if (commandRepresentation is null && !isCommandActive)
             return await ExecuteNextAsync(context);
         
         var commandContext = new CommandContext(context.Session, context.Update);
-        var commandDescriptor = await GetCommandDescriptorAsync(commandName, chatId);
+        var commandDescriptor = await GetCommandDescriptorAsync(commandRepresentation!, chatId);
         var commandContainer = await _commandStoreService.GetCommandContainerAsync(commandContext.Session.ChatId);
         
-        var executedCommand = await ExecuteCommandAsync(commandDescriptor, commandContext, commandContainer);
+        var executedCommand = await ExecuteCommandAsync(commandRepresentation!, commandDescriptor, commandContext, commandContainer);
 
         if (!commandDescriptor.IsCommandComplete()) {
             await _commandStoreService.SaveCommandAsync(context.Session, executedCommand.CommandDescriptor);
@@ -44,26 +51,34 @@ public class CommandService : UpdatePipeline
         return await ExecuteNextAsync(context);
     }
 
-    private async Task<CommandDescriptor> GetCommandDescriptorAsync(string commandName, long chatId)
+    private async Task<CommandDescriptor> GetCommandDescriptorAsync(CommandRepresentation commandRepresentation, long chatId)
     {
         CommandDescriptor commandDescriptor;
         if (await _commandStoreService.IsCommandActiveAsync(chatId)) {
             commandDescriptor = await _commandStoreService.GetCommandDescriptorAsync(chatId);
         }
         else {
-            commandDescriptor = CommandDescriptor.CreateNew(commandName, _commandFactory.GetTotalParts(commandName));
+            commandDescriptor = CommandDescriptor.CreateNew(commandRepresentation.CommandIdentifier, commandRepresentation.CommandParts.Count);
         }
 
         return commandDescriptor;
     }
 
     private async Task<ExecuteCommandResult> ExecuteCommandAsync(
+        CommandRepresentation commandRepresentation,
         CommandDescriptor descriptor,
         CommandContext commandContext, 
         CommandContainer? container)
     {
         container ??= new CommandContainer();
-        var commandPart = GetCommandPart(descriptor, commandContext, container);
+        var commandPart = GetCommandPart(commandRepresentation, descriptor, commandContext, container);
+        
+        if (descriptor.State == CommandPartState.Action)
+        {
+            await commandPart.ExecuteActionRequestAsync();
+            descriptor.SetProcessState();
+            return new ExecuteCommandResult { CommandDescriptor = descriptor, CommandContainer = container };
+        }
         
         if (descriptor.State == CommandPartState.Process)
         {
@@ -71,30 +86,21 @@ public class CommandService : UpdatePipeline
             if (commandPart.IsCommandPartCompleted) {
                 descriptor.IncrementPart();
                 if (!descriptor.IsCommandComplete()) {
-                    return await ExecuteCommandAsync(descriptor, commandContext, container);
+                    return await ExecuteCommandAsync(commandRepresentation, descriptor, commandContext, container);
                 }
             }
         }
         
-        if (descriptor.State == CommandPartState.Action)
-        {
-            await commandPart.ExecuteActionRequestAsync();
-            descriptor.SetProcessState();
-        }
-        
-        return new ExecuteCommandResult
-        {
-            CommandDescriptor = descriptor,
-            CommandContainer = container
-        };
+        return new ExecuteCommandResult { CommandDescriptor = descriptor, CommandContainer = container };
     }
 
     private CommandPart GetCommandPart(
+        CommandRepresentation commandRepresentation,
         CommandDescriptor descriptor, 
         CommandContext commandContext,
         CommandContainer commandContainer)
     {
-        var commandPart = _commandFactory.CreateCommandPart(descriptor.Name, descriptor.PartNumber);
+        var commandPart = _commandFactory.CreateCommandPart(commandRepresentation, descriptor.PartNumber);
         commandPart.Init(commandContext, commandContainer);
         return commandPart;
     }
