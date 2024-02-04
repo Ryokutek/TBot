@@ -20,33 +20,30 @@ internal class CommandService : UpdatePipeline
 
     public override async Task<Context> ExecuteAsync(Context context)
     {
-        if (context.Update.Message!.Text == "/cancel")
-        {
+        if (context.Update.Message!.Text == "/cancel") {
             await _commandStoreService.ClearCommandAsync(context.Session);
             return await ExecuteNextAsync(context);
         }
         
+        CommandDescriptor commandDescriptor;
         var chatId = context.Update.Message!.From!.Id;
-
-        CommandDescriptor? commandDescriptor = null;
-        if (!_commandFactory.TryGetCommandByTrigger(context.Update, out var commandRepresentation))
-        {
-            if (await _commandStoreService.IsCommandActiveAsync(chatId))
-            {
-                commandDescriptor = await GetCommandDescriptorAsync(commandRepresentation!, chatId);
-                if (!_commandFactory.TryGetCommandByIdentifier(commandDescriptor.CommandIdentifier, out commandRepresentation))
-                { 
-                    return await ExecuteNextAsync(context);
-                }
-            }
+        
+        if (await _commandStoreService.IsCommandActiveAsync(chatId)) {
+            commandDescriptor = await _commandStoreService.GetCommandDescriptorAsync(chatId);
+        }
+        else if(_commandFactory.IsCommandExistsByTrigger(context.Update, out var commandRepresentation)) {
+            commandDescriptor = CommandDescriptor.CreateNew(commandRepresentation!.CommandIdentifier, commandRepresentation.CommandParts.Count);
+        }
+        else {
+            return await ExecuteNextAsync(context);
         }
         
         var commandContext = new CommandContext(context.Session, context.Update);
         var commandContainer = await _commandStoreService.GetCommandContainerAsync(commandContext.Session.ChatId);
         
-        var executedCommand = await ExecuteCommandAsync(commandRepresentation!, commandDescriptor!, commandContext, commandContainer);
+        var executedCommand = await ExecuteCommandAsync(commandDescriptor!, commandContext, commandContainer);
 
-        if (!commandDescriptor!.IsCommandComplete()) {
+        if (!commandDescriptor.IsCommandComplete()) {
             await _commandStoreService.SaveCommandAsync(context.Session, executedCommand.CommandDescriptor);
             await _commandStoreService.SaveCommandContainerAsync(commandContext.Session, executedCommand.CommandContainer);
         }
@@ -56,28 +53,14 @@ internal class CommandService : UpdatePipeline
         
         return await ExecuteNextAsync(context);
     }
-
-    private async Task<CommandDescriptor> GetCommandDescriptorAsync(CommandRepresentation commandRepresentation, long chatId)
-    {
-        CommandDescriptor commandDescriptor;
-        if (await _commandStoreService.IsCommandActiveAsync(chatId)) {
-            commandDescriptor = await _commandStoreService.GetCommandDescriptorAsync(chatId);
-        }
-        else {
-            commandDescriptor = CommandDescriptor.CreateNew(commandRepresentation.CommandIdentifier, commandRepresentation.CommandParts.Count);
-        }
-
-        return commandDescriptor;
-    }
-
+    
     private async Task<ExecuteCommandResult> ExecuteCommandAsync(
-        CommandRepresentation commandRepresentation,
         CommandDescriptor descriptor,
         CommandContext commandContext, 
         CommandContainer? container)
     {
         container ??= new CommandContainer();
-        var commandPart = GetCommandPart(commandRepresentation, descriptor, commandContext, container);
+        var commandPart = GetCommandPart(descriptor, commandContext, container);
         
         if (descriptor.State == CommandPartState.Action)
         {
@@ -92,7 +75,7 @@ internal class CommandService : UpdatePipeline
             if (commandPart.IsCommandPartCompleted) {
                 descriptor.IncrementPart();
                 if (!descriptor.IsCommandComplete()) {
-                    return await ExecuteCommandAsync(commandRepresentation, descriptor, commandContext, container);
+                    return await ExecuteCommandAsync(descriptor, commandContext, container);
                 }
             }
         }
@@ -101,12 +84,11 @@ internal class CommandService : UpdatePipeline
     }
 
     private CommandPart GetCommandPart(
-        CommandRepresentation commandRepresentation,
         CommandDescriptor descriptor, 
         CommandContext commandContext,
         CommandContainer commandContainer)
     {
-        var commandPart = _commandFactory.CreateCommandPart(commandRepresentation, descriptor.PartNumber);
+        var commandPart = _commandFactory.CreateCommandPart(descriptor.CommandIdentifier, descriptor.PartNumber);
         commandPart.Init(commandContext, commandContainer);
         return commandPart;
     }

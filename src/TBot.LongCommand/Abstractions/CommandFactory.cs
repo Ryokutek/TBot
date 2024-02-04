@@ -19,21 +19,20 @@ public class CommandFactory : ICommandFactory, IDisposable
         _serviceScope = serviceProvider.CreateScope();
     }
 
-    public bool TryGetCommandByTrigger(Update update, out CommandRepresentation? commandRepresentation)
+    public bool IsCommandExistsByTrigger(Update update, out CommandRepresentation? commandRepresentation)
     {
         commandRepresentation = _commands.FirstOrDefault(x => x.CommandTrigger(update));
         return commandRepresentation is not null;
     }
     
-    public bool TryGetCommandByIdentifier(string commandIdentifier, out CommandRepresentation? commandRepresentation)
+    public bool IsCommandExistsByIdentifier(string commandIdentifier)
     {
-        commandRepresentation = _commands.FirstOrDefault(x => x.CommandIdentifier == commandIdentifier);
-        return commandRepresentation is not null;
+        return _commands.FirstOrDefault(x => x.CommandIdentifier == commandIdentifier) is not null;
     }
     
-    public CommandPart CreateCommandPart(CommandRepresentation commandRepresentation, int partNumber)
+    public CommandPart CreateCommandPart(string commandIdentifier, int partNumber)
     {
-        var type = commandRepresentation.CommandParts[partNumber].Type;
+        var type = _commands.First(x=>x.CommandIdentifier == commandIdentifier).CommandParts[partNumber].Type;
         return (CommandPart)ActivatorUtilities.CreateInstance(_serviceScope.ServiceProvider, type);
     }
     
