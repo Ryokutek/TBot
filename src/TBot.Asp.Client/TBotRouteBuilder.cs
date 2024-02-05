@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TBot.Client.Telegram;
 using TBot.Core.ConfigureOptions;
@@ -62,14 +63,24 @@ public class TBotRouteBuilder
         return endpoints.MapPost(pattern,
             async context =>
             {
-                var updateDto = await JsonSerializer.DeserializeAsync<UpdateDto>(context.Request.Body);
-                if (updateDto == null) {
-                    throw new BadHttpRequestException("Couldn't deserialize an update dto.");
-                }
-
-                using (CurrentSessionThread.SetSession(Session.Create(Guid.NewGuid(), updateDto.Message!.Chat.Id)))
+                var logger = serviceProvider.GetService<ILogger<TBotRouteBuilder>>();
+                logger?.LogInformation("TBot. Update has been received");
+                
+                try
                 {
-                    await handler(context, serviceProvider, updateDto.ToDomain());
+                    var updateDto = await JsonSerializer.DeserializeAsync<UpdateDto>(context.Request.Body);
+                    if (updateDto == null) {
+                        throw new BadHttpRequestException("Couldn't deserialize an update dto.");
+                    }
+
+                    using (CurrentSessionThread.SetSession(Session.Create(Guid.NewGuid(), updateDto.Message!.Chat.Id)))
+                    {
+                        await handler(context, serviceProvider, updateDto.ToDomain());
+                    }
+                }
+                catch (Exception e)
+                {
+                    logger?.LogCritical(e, "TBot. Update error");
                 }
             });
     }
