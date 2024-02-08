@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using TBot.Core.TBot.RequestIdentification;
+using TBot.Core.TBot.EnvironmentManagement;
 using TBot.Core.Telegram;
 using TBot.Core.UpdateEngine;
 using TBot.Core.UpdateEngine.Abstraction;
@@ -44,7 +44,7 @@ public class UpdateEngineService : IUpdateEngineService
             pipelineAdder = pipelineAdder.SetNextPipeline(_pipelines[i]);
         }
         
-        var context = Context.Create(CurrentSessionThread.Session ?? throw new Exception("Session not found"), update);
+        var context = Context.Create(TBotEnvironment.CurrentUser ?? throw new Exception("Session not found"), update);
         await updatePipelineMaster.ExecuteAsync(context);
     }
 }

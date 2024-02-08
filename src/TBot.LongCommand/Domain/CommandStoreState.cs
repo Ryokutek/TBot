@@ -1,4 +1,4 @@
-﻿using TBot.Core.TBot.RequestIdentification;
+﻿using TBot.Core.TBot.EnvironmentManagement;
 
 namespace TBot.LongCommand.Domain;
 
@@ -11,12 +11,12 @@ public class CommandStoreState
     public int TotalParts { get; set; }
     public CommandPartState PartState { get; set; }
 
-    public static CommandStoreState Create(Session session, CommandDescriptor commandDescriptor)
+    public static CommandStoreState Create(UserSession userSession, CommandDescriptor commandDescriptor)
     {
         return new CommandStoreState
         {
-            SessionId = session.Id,
-            ChatId = session.ChatId,
+            SessionId = userSession.Id,
+            ChatId = userSession.ChatId,
             CommandIdentifier = commandDescriptor.CommandIdentifier,
             PartNumber = commandDescriptor.PartNumber,
             TotalParts = commandDescriptor.TotalParts,

@@ -1,5 +1,5 @@
 ﻿using TBot.Core.Stores;
-using TBot.Core.TBot.RequestIdentification;
+using TBot.Core.TBot.EnvironmentManagement;
 using TBot.LongCommand.Domain;
 using TBot.LongCommand.Interfaces;
 
@@ -51,19 +51,19 @@ internal class CommandStoreService : ICommandStoreService
         return _tBotStore.GetAsync<CommandContainer>(GetContainerKey(chatId));
     }
 
-    public Task SaveCommandAsync(Session session, CommandDescriptor commandDescriptor)
+    public Task SaveCommandAsync(UserSession userSession, CommandDescriptor commandDescriptor)
     {
-        return _tBotStore.SetAsync(GetKey(session.ChatId), CommandStoreState.Create(session, commandDescriptor));
+        return _tBotStore.SetAsync(GetKey(userSession.ChatId), CommandStoreState.Create(userSession, commandDescriptor));
     }
     
-    public Task SaveCommandContainerAsync(Session session, CommandContainer commandContainer)
+    public Task SaveCommandContainerAsync(UserSession userSession, CommandContainer commandContainer)
     {
-        return _tBotStore.SetAsync(GetContainerKey(session.ChatId), commandContainer);
+        return _tBotStore.SetAsync(GetContainerKey(userSession.ChatId), commandContainer);
     }
 
-    public async Task ClearCommandAsync(Session session)
+    public async Task ClearCommandAsync(UserSession userSession)
     {
-        await _tBotStore.RemoveAsync(GetKey(session.ChatId));
-        await _tBotStore.RemoveAsync(GetContainerKey(session.ChatId));
+        await _tBotStore.RemoveAsync(GetKey(userSession.ChatId));
+        await _tBotStore.RemoveAsync(GetContainerKey(userSession.ChatId));
     }
 }

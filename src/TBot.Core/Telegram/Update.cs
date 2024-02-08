@@ -59,4 +59,9 @@ public class Update
     {
         return Message is not null;
     }
+    
+    public bool IsCallbackQuery()
+    {
+        return CallbackQuery is not null;
+    }
 }

@@ -1,4 +1,4 @@
-namespace TBot.Core.RequestOptions.ReplyMarkupParameters.Buttons.RequestButtonParameter;
+namespace TBot.Core.RequestOptions.Reply.MarkumParameters.Buttons.RequestButtonParameter;
 
 public class KeyboardButtonPollType
 {

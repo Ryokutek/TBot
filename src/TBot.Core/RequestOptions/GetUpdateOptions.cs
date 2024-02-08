@@ -8,10 +8,10 @@ public class GetUpdateOptions : BaseOptions
     public int Offset { get; set; }
 
     [QueryParameter("limit")] 
-    public int Limit { get; set; } = Constants.Update.Limit;
+    public int Limit { get; set; } = Constants.UpdateSettings.Limit;
 
     [QueryParameter("timeout")] 
-    public int Timeout { get; set; } = Constants.Update.Timeout;
+    public int Timeout { get; set; } = Constants.UpdateSettings.Timeout;
 
     [QueryParameter("allowed_updates", IsJson = true)] 
     public List<string> AllowedUpdates { get; set; } = new ();

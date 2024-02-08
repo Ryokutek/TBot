@@ -21,7 +21,7 @@ internal class CommandService : UpdatePipeline
     public override async Task<Context> ExecuteAsync(Context context)
     {
         if (context.Update.Message!.Text == "/cancel") {
-            await _commandStoreService.ClearCommandAsync(context.Session);
+            await _commandStoreService.ClearCommandAsync(context.UserSession);
             return await ExecuteNextAsync(context);
         }
         
@@ -38,17 +38,17 @@ internal class CommandService : UpdatePipeline
             return await ExecuteNextAsync(context);
         }
         
-        var commandContext = new CommandContext(context.Session, context.Update);
-        var commandContainer = await _commandStoreService.GetCommandContainerAsync(commandContext.Session.ChatId);
+        var commandContext = new CommandContext(context.UserSession, context.Update);
+        var commandContainer = await _commandStoreService.GetCommandContainerAsync(commandContext.UserSession.ChatId);
         
         var executedCommand = await ExecuteCommandAsync(commandDescriptor!, commandContext, commandContainer);
 
         if (!commandDescriptor.IsCommandComplete()) {
-            await _commandStoreService.SaveCommandAsync(context.Session, executedCommand.CommandDescriptor);
-            await _commandStoreService.SaveCommandContainerAsync(commandContext.Session, executedCommand.CommandContainer);
+            await _commandStoreService.SaveCommandAsync(context.UserSession, executedCommand.CommandDescriptor);
+            await _commandStoreService.SaveCommandContainerAsync(commandContext.UserSession, executedCommand.CommandContainer);
         }
         else {
-            await _commandStoreService.ClearCommandAsync(context.Session);
+            await _commandStoreService.ClearCommandAsync(context.UserSession);
         }
         
         return await ExecuteNextAsync(context);

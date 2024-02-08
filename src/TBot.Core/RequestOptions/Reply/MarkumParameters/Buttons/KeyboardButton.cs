@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
-using TBot.Core.RequestOptions.ReplyMarkupParameters.Buttons.RequestButtonParameter;
+using TBot.Core.RequestOptions.Reply.MarkumParameters.Buttons.RequestButtonParameter;
 
-namespace TBot.Core.RequestOptions.ReplyMarkupParameters.Buttons;
+namespace TBot.Core.RequestOptions.Reply.MarkumParameters.Buttons;
 
 public class KeyboardButton : Button
 {

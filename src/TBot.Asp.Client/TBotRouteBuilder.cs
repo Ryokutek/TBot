@@ -7,8 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TBot.Client.Telegram;
+using TBot.Client.Utilities;
 using TBot.Core.ConfigureOptions;
-using TBot.Core.TBot.RequestIdentification;
+using TBot.Core.TBot.EnvironmentManagement;
 using TBot.Core.Telegram;
 using TBot.Core.UpdateEngine;
 using TBot.Dto.Updates;
@@ -73,9 +74,10 @@ public class TBotRouteBuilder
                         throw new BadHttpRequestException("Couldn't deserialize an update dto.");
                     }
 
-                    using (CurrentSessionThread.SetSession(Session.Create(Guid.NewGuid(), updateDto.Message!.Chat.Id)))
+                    var update = updateDto.ToDomain();
+                    using (TBotEnvironment.SetSession(update.ToSession()))
                     {
-                        await handler(context, serviceProvider, updateDto.ToDomain());
+                        await handler(context, serviceProvider, update);
                     }
                 }
                 catch (Exception e)

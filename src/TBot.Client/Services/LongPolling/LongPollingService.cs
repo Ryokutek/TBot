@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using TBot.Client.Utilities;
 using TBot.Core.ConfigureOptions;
 using TBot.Core.LongPolling;
 using TBot.Core.RequestOptions;
 using TBot.Core.TBot;
-using TBot.Core.TBot.RequestIdentification;
+using TBot.Core.TBot.EnvironmentManagement;
 using TBot.Core.Telegram;
 
 namespace TBot.Client.Services.LongPolling;
@@ -56,19 +57,19 @@ public class LongPollingService : ILongPollingService
             }
 
             var response = await _botClient.GetUpdateAsync(UpdateOptions);
-            if (!response.Result.Any())
+            if (response.Result is null)
             {
                 continue;
             }
 
-            foreach (var updateDto in response.Result)
+            foreach (var update in response.Result)
             {
-                using (CurrentSessionThread.SetSession(Session.Create(Guid.NewGuid(), updateDto.Message!.Chat.Id)))
+                using (TBotEnvironment.SetSession(update.ToSession()))
                 {
-                    await updateAction(updateDto);
+                    await updateAction(update);
                 }
-                    
-                UpdateOptions.Offset = updateDto.UpdateId + 1;
+                
+                UpdateOptions.Offset = update.UpdateId + 1;
             }
         }
     }

@@ -1,21 +1,21 @@
-﻿using TBot.Core.TBot.RequestIdentification;
+﻿using TBot.Core.TBot.EnvironmentManagement;
 using TBot.Core.Telegram;
 
 namespace TBot.Core.UpdateEngine;
 
 public class Context
 {
-    public Session Session { get; private set; }
+    public UserSession UserSession { get; private set; }
     public Update Update { get; private set; }
 
-    protected Context(Session session, Update update)
+    protected Context(UserSession userSession, Update update)
     {
-        Session = session;
+        UserSession = userSession;
         Update = update;
     }
 
-    public static Context Create(Session session, Update update)
+    public static Context Create(UserSession userSession, Update update)
     {
-        return new Context(session, update);
+        return new Context(userSession, update);
     }
 }

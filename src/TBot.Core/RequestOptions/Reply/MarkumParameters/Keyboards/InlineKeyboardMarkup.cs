@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
-using TBot.Core.RequestOptions.ReplyMarkupParameters.Buttons;
+using TBot.Core.RequestOptions.Reply.MarkumParameters.Buttons;
 
-namespace TBot.Core.RequestOptions.ReplyMarkupParameters.Keyboards;
+namespace TBot.Core.RequestOptions.Reply.MarkumParameters.Keyboards;
 
 public class InlineKeyboardMarkup : Keyboard<InlineKeyboardButton>
 {

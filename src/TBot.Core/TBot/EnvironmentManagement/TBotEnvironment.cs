@@ -1,19 +1,20 @@
-﻿namespace TBot.Core.TBot.RequestIdentification;
+﻿namespace TBot.Core.TBot.EnvironmentManagement;
 
-public class CurrentSessionThread
+// ReSharper disable once InconsistentNaming
+public class TBotEnvironment
 {
-    private static readonly AsyncLocal<Session?> AsyncLocalSession = new();
+    private static readonly AsyncLocal<UserSession?> AsyncLocalSession = new();
     
-    public static Session? Session
+    public static UserSession? CurrentUser
     {
         get => AsyncLocalSession.Value;
         set => AsyncLocalSession.Value = value;
     }
 
-    public static IDisposable SetSession(Session? session)
+    public static IDisposable SetSession(UserSession? session)
     {
-        Session = session;
-        return new Disposable(() => { Session = null; });
+        CurrentUser = session;
+        return new Disposable(() => { CurrentUser = null; });
     }
 }
 

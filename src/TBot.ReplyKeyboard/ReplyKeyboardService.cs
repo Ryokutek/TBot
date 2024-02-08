@@ -1,12 +1,12 @@
 ﻿using TBot.Core.RequestOptions;
 using TBot.Core.Stores;
 using TBot.Core.TBot;
-using TBot.Core.TBot.RequestIdentification;
+using TBot.Core.TBot.EnvironmentManagement;
 using TBot.Core.Telegram;
 using TBot.Core.UpdateEngine;
 using TBot.ReplyKeyboard.Models;
-using KeyboardButton = TBot.Core.RequestOptions.ReplyMarkupParameters.Buttons.KeyboardButton;
-using ReplyKeyboardMarkup = TBot.Core.RequestOptions.ReplyMarkupParameters.Keyboards.ReplyKeyboardMarkup;
+using KeyboardButton = TBot.Core.RequestOptions.Reply.MarkumParameters.Buttons.KeyboardButton;
+using ReplyKeyboardMarkup = TBot.Core.RequestOptions.Reply.MarkumParameters.Keyboards.ReplyKeyboardMarkup;
 
 namespace TBot.ReplyKeyboard;
 
@@ -34,7 +34,7 @@ public class ReplyKeyboardService : UpdatePipeline
             return await ExecuteNextAsync(context);
         }
         
-        var key = GetKey(CurrentSessionThread.Session!.ChatId.ToString());
+        var key = GetKey(TBotEnvironment.CurrentUser!.ChatId.ToString());
         var message = context.Update.Message;
         
         var keyboardModel = _rootReplyKeyboard.GetKeyboard(message!.Text!);
@@ -88,8 +88,8 @@ public class ReplyKeyboardService : UpdatePipeline
         
         _itBotStore?.SetAsync(key, new ReplyKeyboardState
         {
-            SessionId = CurrentSessionThread.Session?.Id ?? Guid.Empty,
-            ChatId = CurrentSessionThread.Session?.ChatId ?? default,
+            SessionId = TBotEnvironment.CurrentUser?.Id ?? Guid.Empty,
+            ChatId = TBotEnvironment.CurrentUser?.ChatId ?? default,
             CurrentReplyKeyboardName = currentReplyName
         });
     }
