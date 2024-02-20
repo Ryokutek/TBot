@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TBot.Core.Builders;
 using TBot.Core.Stores;
@@ -18,8 +19,9 @@ public static class Extensions
             var options = scope.ServiceProvider.GetRequiredService<IOptionsSnapshot<ReplyKeyboardModel>>();
             var client = provider.GetRequiredService<ITBotClient>();
             var store = provider.GetService<ITBotStore>();
+            var logger = provider.GetService<ILogger<ReplyKeyboardService>>();
 
-            return new ReplyKeyboardService(options.Value, client, store);
+            return new ReplyKeyboardService(logger, options.Value, client, store);
         });
     }
     
@@ -31,8 +33,9 @@ public static class Extensions
         {
             var client = provider.GetRequiredService<ITBotClient>();
             var store = provider.GetService<ITBotStore>();
+            var logger = provider.GetService<ILogger<ReplyKeyboardService>>();
 
-            return new ReplyKeyboardService(replyKeyboardModel, client, store);
+            return new ReplyKeyboardService(logger, replyKeyboardModel, client, store);
         });
     }
     
@@ -44,8 +47,9 @@ public static class Extensions
         {
             var client = provider.GetRequiredService<ITBotClient>();
             var store = provider.GetService<ITBotStore>();
+            var logger = provider.GetService<ILogger<ReplyKeyboardService>>();
 
-            return new ReplyKeyboardService(replyKeyboardModel(provider), client, store);
+            return new ReplyKeyboardService(logger, replyKeyboardModel(provider), client, store);
         });
     }
 }

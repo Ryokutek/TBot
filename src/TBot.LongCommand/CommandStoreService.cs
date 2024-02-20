@@ -51,19 +51,19 @@ internal class CommandStoreService : ICommandStoreService
         return _tBotStore.GetAsync<CommandContainer>(GetContainerKey(chatId));
     }
 
-    public Task SaveCommandAsync(UserSession userSession, CommandDescriptor commandDescriptor)
+    public Task SaveCommandAsync(CurrentRequest currentRequest, CommandDescriptor commandDescriptor)
     {
-        return _tBotStore.SetAsync(GetKey(userSession.ChatId), CommandStoreState.Create(userSession, commandDescriptor));
+        return _tBotStore.SetAsync(GetKey(currentRequest.FromChatId), CommandStoreState.Create(currentRequest, commandDescriptor));
     }
     
-    public Task SaveCommandContainerAsync(UserSession userSession, CommandContainer commandContainer)
+    public Task SaveCommandContainerAsync(CurrentRequest currentRequest, CommandContainer commandContainer)
     {
-        return _tBotStore.SetAsync(GetContainerKey(userSession.ChatId), commandContainer);
+        return _tBotStore.SetAsync(GetContainerKey(currentRequest.FromChatId), commandContainer);
     }
 
-    public async Task ClearCommandAsync(UserSession userSession)
+    public async Task ClearCommandAsync(CurrentRequest currentRequest)
     {
-        await _tBotStore.RemoveAsync(GetKey(userSession.ChatId));
-        await _tBotStore.RemoveAsync(GetContainerKey(userSession.ChatId));
+        await _tBotStore.RemoveAsync(GetKey(currentRequest.FromChatId));
+        await _tBotStore.RemoveAsync(GetContainerKey(currentRequest.FromChatId));
     }
 }

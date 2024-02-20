@@ -1,4 +1,5 @@
-﻿using TBot.Core.RequestOptions;
+﻿using Microsoft.Extensions.Logging;
+using TBot.Core.RequestOptions;
 using TBot.Core.Stores;
 using TBot.Core.TBot;
 using TBot.Core.TBot.EnvironmentManagement;
@@ -12,6 +13,7 @@ namespace TBot.ReplyKeyboard;
 
 public class ReplyKeyboardService : UpdatePipeline
 {
+    private readonly ILogger<ReplyKeyboardService>? _logger;
     private readonly RootReplyKeyboard _rootReplyKeyboard;
     private readonly ITBotClient _tBotClient;
     private readonly ITBotStore? _itBotStore;
@@ -19,10 +21,12 @@ public class ReplyKeyboardService : UpdatePipeline
     private static string GetKey(string chatId) => $"TBot:ReplyKeyboard:{chatId}";
     
     public ReplyKeyboardService(
+        ILogger<ReplyKeyboardService>? logger,
         ReplyKeyboardModel replyKeyboardModel, 
         ITBotClient tBotClient, 
         ITBotStore? itBotStore)
     {
+        _logger = logger;
         _rootReplyKeyboard = RootReplyKeyboard.Create(replyKeyboardModel);
         _tBotClient = tBotClient;
         _itBotStore = itBotStore;
@@ -30,11 +34,14 @@ public class ReplyKeyboardService : UpdatePipeline
 
     public override async Task<Context> ExecuteAsync(Context context)
     {
+        _logger?.LogDebug("Execution ReplyKeyboard processing has started.");
+        
         if (!context.Update.IsMessage()) {
+            _logger?.LogDebug("Execution ReplyKeyboard processing has skipped.");
             return await ExecuteNextAsync(context);
         }
         
-        var key = GetKey(TBotEnvironment.CurrentUser!.ChatId.ToString());
+        var key = GetKey(TBotEnvironment.CurrentRequest!.FromChatId.ToString());
         var message = context.Update.Message;
         
         var keyboardModel = _rootReplyKeyboard.GetKeyboard(message!.Text!);
@@ -47,8 +54,9 @@ public class ReplyKeyboardService : UpdatePipeline
             }
         }
 
-        await SendKeyboardAsync(message.From!.Id, keyboardModel!);
-        await SaveReplyKeyboardStateAsync(key, keyboardModel!.Name);
+        await SendKeyboardAsync(message.From!.Id, keyboardModel);
+        await SaveReplyKeyboardStateAsync(key, keyboardModel.Name);
+        _logger?.LogDebug("Execution ReplyKeyboard processing has completed.");
         return await ExecuteNextAsync(context);
     }
 
@@ -88,8 +96,8 @@ public class ReplyKeyboardService : UpdatePipeline
         
         _itBotStore?.SetAsync(key, new ReplyKeyboardState
         {
-            SessionId = TBotEnvironment.CurrentUser?.Id ?? Guid.Empty,
-            ChatId = TBotEnvironment.CurrentUser?.ChatId ?? default,
+            SessionId = TBotEnvironment.CurrentRequest?.TraceId ?? Guid.Empty,
+            ChatId = TBotEnvironment.CurrentRequest?.FromChatId ?? default,
             CurrentReplyKeyboardName = currentReplyName
         });
     }

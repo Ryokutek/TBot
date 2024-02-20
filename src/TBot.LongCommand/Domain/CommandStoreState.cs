@@ -11,12 +11,12 @@ public class CommandStoreState
     public int TotalParts { get; set; }
     public CommandPartState PartState { get; set; }
 
-    public static CommandStoreState Create(UserSession userSession, CommandDescriptor commandDescriptor)
+    public static CommandStoreState Create(CurrentRequest currentRequest, CommandDescriptor commandDescriptor)
     {
         return new CommandStoreState
         {
-            SessionId = userSession.Id,
-            ChatId = userSession.ChatId,
+            SessionId = currentRequest.TraceId,
+            ChatId = currentRequest.FromChatId,
             CommandIdentifier = commandDescriptor.CommandIdentifier,
             PartNumber = commandDescriptor.PartNumber,
             TotalParts = commandDescriptor.TotalParts,

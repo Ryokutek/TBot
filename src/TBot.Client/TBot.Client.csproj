@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.7.7</Version>
+        <Version>0.7.8</Version>
         <Authors>gsMelford</Authors>
         <Company>Ryokutek</Company>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -13,7 +13,7 @@
         <RepositoryUrl>https://github.com/Ryokutek/TBot</RepositoryUrl>
         <RootNamespace>TBot.Client</RootNamespace>
         <Product>TBot</Product>
-        <LangVersion>11</LangVersion>
+        <LangVersion>latest</LangVersion>
         <IsPackable>true</IsPackable>
         <OutputPath>../nupkgs</OutputPath>
     </PropertyGroup>
@@ -26,6 +26,7 @@
       <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
       <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+      <PackageReference Include="Serilog" Version="3.1.1" />
       <PackageReference Include="StackExchange.Redis" Version="2.7.4" />
     </ItemGroup>
 

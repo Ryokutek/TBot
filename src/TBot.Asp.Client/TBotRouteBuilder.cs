@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Serilog;
+using Serilog.Context;
 using TBot.Client.Telegram;
 using TBot.Client.Utilities;
 using TBot.Core.ConfigureOptions;
@@ -65,24 +67,28 @@ public class TBotRouteBuilder
             async context =>
             {
                 var logger = serviceProvider.GetService<ILogger<TBotRouteBuilder>>();
-                logger?.LogInformation("TBot. Update has been received");
-                
                 try
                 {
                     var updateDto = await JsonSerializer.DeserializeAsync<UpdateDto>(context.Request.Body);
                     if (updateDto == null) {
-                        throw new BadHttpRequestException("Couldn't deserialize an update dto.");
+                        throw new BadHttpRequestException($"Couldn't deserialize an update dto. RequestBody: {context.Request.Body}");
                     }
-
+                    
                     var update = updateDto.ToDomain();
-                    using (TBotEnvironment.SetSession(update.ToSession()))
+                    logger?.LogDebug("Received an update from Telegram. UpdateId: {UpdateId}", update.UpdateId);
+                    using (TBotEnvironment.SetRequest(update.ToSession()))
                     {
-                        await handler(context, serviceProvider, update);
+                        using (LogContext.PushProperty("TBotTraceId", TBotEnvironment.CurrentRequest!.TraceId))
+                        {
+                            logger?.LogDebug("Telegram update processing started. UpdateId: {UpdateId}", update.UpdateId);
+                            await handler(context, serviceProvider, update);
+                            logger?.LogDebug("Telegram update processing completed. UpdateId: {UpdateId}", update.UpdateId);
+                        }
                     }
                 }
                 catch (Exception e)
                 {
-                    logger?.LogCritical(e, "TBot. Update error");
+                    logger?.LogCritical(e, "Update error");
                 }
             });
     }

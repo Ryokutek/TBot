@@ -3,18 +3,18 @@
 // ReSharper disable once InconsistentNaming
 public class TBotEnvironment
 {
-    private static readonly AsyncLocal<UserSession?> AsyncLocalSession = new();
+    private static readonly AsyncLocal<CurrentRequest?> AsyncLocalCurrentRequest = new();
     
-    public static UserSession? CurrentUser
+    public static CurrentRequest? CurrentRequest
     {
-        get => AsyncLocalSession.Value;
-        set => AsyncLocalSession.Value = value;
+        get => AsyncLocalCurrentRequest.Value;
+        set => AsyncLocalCurrentRequest.Value = value;
     }
 
-    public static IDisposable SetSession(UserSession? session)
+    public static IDisposable SetRequest(CurrentRequest? currentRequest)
     {
-        CurrentUser = session;
-        return new Disposable(() => { CurrentUser = null; });
+        CurrentRequest = currentRequest;
+        return new Disposable(() => { CurrentRequest = null; });
     }
 }
 
