@@ -7,7 +7,7 @@ internal interface ICommandStoreService : ILongCommandStoreService
 {
     Task<CommandDescriptor> GetCommandDescriptorAsync(long chatId);
     Task<CommandContainer?> GetCommandContainerAsync(long chatId);
-    Task SaveCommandAsync(UserSession userSession, CommandDescriptor commandDescriptor);
-    Task SaveCommandContainerAsync(UserSession userSession, CommandContainer commandContainer);
-    Task ClearCommandAsync(UserSession userSession);
+    Task SaveCommandAsync(CurrentRequest currentRequest, CommandDescriptor commandDescriptor);
+    Task SaveCommandContainerAsync(CurrentRequest currentRequest, CommandContainer commandContainer);
+    Task ClearCommandAsync(CurrentRequest currentRequest);
 }

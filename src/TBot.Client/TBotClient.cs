@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TBot.Client.Telegram;
 using TBot.Core.CallLimiter;
@@ -7,6 +8,7 @@ using TBot.Core.HttpRequests;
 using TBot.Core.RequestOptions;
 using TBot.Core.RequestOptions.Structure;
 using TBot.Core.TBot;
+using TBot.Core.TBot.EnvironmentManagement;
 using TBot.Core.Telegram;
 using TBot.Dto.Responses;
 using TBot.Dto.Types;
@@ -17,6 +19,7 @@ namespace TBot.Client;
 // ReSharper disable once InconsistentNaming
 public class TBotClient : ITBotClient
 {
+    private readonly ILogger<ITBotClient>? _logger;
     private readonly IRequestService _requestService;
     private readonly ICallLimiterService? _callLimitService;
 
@@ -24,11 +27,13 @@ public class TBotClient : ITBotClient
     private readonly CallLimiterOptions? _limitConfig;
 
     public TBotClient(
+        ILogger<ITBotClient>? logger,
         IOptions<TBotOptions> botOptions,
         IRequestService requestService, 
         IOptions<CallLimiterOptions>? limitConfig = null,
         ICallLimiterService? callLimitService = null)
     {
+        _logger = logger;
         _botOptions = botOptions.Value;
         _limitConfig = limitConfig?.Value;
         _requestService = requestService;
@@ -90,7 +95,7 @@ public class TBotClient : ITBotClient
         var responseDto = await JsonSerializer.DeserializeAsync<ResponseDto<TResponseDto>>(responseSteam);
 
         if (responseDto is null) {
-            throw new Exception();
+            throw new Exception($"Couldn't deserialize an response dto. RequestBody: {response.Content.ReadAsStringAsync()}");
         }
 
         return Response<TResponseDomain>.Create(
@@ -108,7 +113,26 @@ public class TBotClient : ITBotClient
         if (_callLimitService is not null && !string.IsNullOrEmpty(telegramRequest.ChatId)) {
             await _callLimitService.WaitAsync(telegramRequest.ChatId, _limitConfig!); 
         }
+        
+        _logger?.LogDebug("Telegram Bot API request has been started. Method: {HttpMethod}. Path: {RequestPath}.", 
+            request.Method, request.Endpoint);
+        
+        var response = await _requestService.SendAsync(telegramRequest.Build());
+        await LogRequestStatusAsync(response);
+        return response;
+    }
 
-        return await _requestService.SendAsync(telegramRequest.Build());
+    private async Task LogRequestStatusAsync(HttpResponseMessage response)
+    {
+        if (response.IsSuccessStatusCode)
+        {
+            _logger?.LogDebug("Telegram Bot API request completed. StatusCode: {StatusCode}.", response.StatusCode);
+        }
+        else
+        {
+            _logger?.LogWarning(
+                "Telegram Bot API request error. StatusCode: {StatusCode}. ResponseBody: {ResponseBody}",
+                response.StatusCode, await response.Content.ReadAsStringAsync());
+        }
     }
 }

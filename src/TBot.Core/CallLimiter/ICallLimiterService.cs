@@ -4,5 +4,5 @@ namespace TBot.Core.CallLimiter;
 
 public interface ICallLimiterService
 {
-    Task WaitAsync(string key, CallLimiterOptions callLimiterOptions);
+    Task WaitAsync(string callLimiterKey, CallLimiterOptions callLimiterOptions);
 }

@@ -25,15 +25,15 @@ public class UpdateEngineService : IUpdateEngineService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "UpdateEngine. Message processing error");
+            _logger.LogError(e, "UpdatePipeline processing error. UpdateId: {UpdateId}", update.UpdateId);
         }
     }
 
     private async Task ExecuteAsync(Update update)
     {
-        _logger.LogInformation("UpdateEngine. New update. UpdateId: {UpdateId}", update.UpdateId);
+        _logger.LogDebug("UpdatePipeline processing has begun. UpdateId: {UpdateId}", update.UpdateId);
         
-        if (!_pipelines.Any()) {
+        if (_pipelines.Count == 0) {
             return;
         }
         
@@ -44,7 +44,8 @@ public class UpdateEngineService : IUpdateEngineService
             pipelineAdder = pipelineAdder.SetNextPipeline(_pipelines[i]);
         }
         
-        var context = Context.Create(TBotEnvironment.CurrentUser ?? throw new Exception("Session not found"), update);
+        var context = Context.Create(TBotEnvironment.CurrentRequest!, update);
         await updatePipelineMaster.ExecuteAsync(context);
+        _logger.LogDebug("UpdatePipeline processing has been completed. UpdateId: {UpdateId}", update.UpdateId);
     }
 }

@@ -26,7 +26,7 @@ internal static class SerializationExtensions
     
     private static async Task<T?> DeserializeAsync<T>(this Stream stream)
     {
-        return await System.Text.Json.JsonSerializer.DeserializeAsync<T>(stream, new JsonSerializerOptions());
+        return await JsonSerializer.DeserializeAsync<T>(stream, new JsonSerializerOptions());
     }
     
     internal static string ToJson<T>(this T? value)

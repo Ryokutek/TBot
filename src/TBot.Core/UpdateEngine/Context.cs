@@ -5,17 +5,17 @@ namespace TBot.Core.UpdateEngine;
 
 public class Context
 {
-    public UserSession UserSession { get; private set; }
+    public CurrentRequest CurrentRequest { get; private set; }
     public Update Update { get; private set; }
 
-    protected Context(UserSession userSession, Update update)
+    protected Context(CurrentRequest currentRequest, Update update)
     {
-        UserSession = userSession;
+        CurrentRequest = currentRequest;
         Update = update;
     }
 
-    public static Context Create(UserSession userSession, Update update)
+    public static Context Create(CurrentRequest currentRequest, Update update)
     {
-        return new Context(userSession, update);
+        return new Context(currentRequest, update);
     }
 }

@@ -6,7 +6,7 @@ namespace TBot.LongCommand.Domain;
 
 public class CommandContext : Context
 {
-    public CommandContext(UserSession userSession, Update update) : base(userSession, update)
+    public CommandContext(CurrentRequest currentRequest, Update update) : base(currentRequest, update)
     {
     }
 }
