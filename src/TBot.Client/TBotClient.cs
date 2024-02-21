@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -8,7 +9,6 @@ using TBot.Core.HttpRequests;
 using TBot.Core.RequestOptions;
 using TBot.Core.RequestOptions.Structure;
 using TBot.Core.TBot;
-using TBot.Core.TBot.EnvironmentManagement;
 using TBot.Core.Telegram;
 using TBot.Dto.Responses;
 using TBot.Dto.Types;
@@ -92,15 +92,17 @@ public class TBotClient : ITBotClient
     {
         _logger?.LogDebug("Request execution started. Method: {HttpMethod}. Endpoint: {Endpoint}.", 
             request.Method, request.Endpoint);
-        
+
+        var watch = Stopwatch.StartNew();
         var response = await SendAsync(request);
         
         var responseSteam = await response.Content.ReadAsStreamAsync();
         var responseDto = await JsonSerializer.DeserializeAsync<ResponseDto<TResponseDto>>(responseSteam);
 
+        watch.Stop();
         _logger?.LogDebug(
-            "Request completed. StatusCode: {StatusCode}. Description: {Description}",
-            response.StatusCode, responseDto?.Description);
+            "Request completed. StatusCode: {StatusCode}. Time: {} ms. Description: {Description}",
+            response.StatusCode, watch.ElapsedMilliseconds, responseDto?.Description);
         
         if (responseDto is null) {
             throw new Exception($"Couldn't deserialize an response dto. RequestBody: {response.Content.ReadAsStringAsync()}");
