@@ -6,7 +6,7 @@ public class CallLimitContext
     private uint Counter { get; set; }
     public int MaxCalls { get; init; }
     public TimeSpan Interval { get; init; }
-    private List<Call> Calls { get; set; } = new ();
+    public List<Call> Calls { get; set; } = new ();
 
     public void SaveCall()
     {
