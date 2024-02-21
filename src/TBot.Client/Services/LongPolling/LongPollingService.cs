@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Serilog.Context;
 using TBot.Client.Utilities;
 using TBot.Core.ConfigureOptions;
 using TBot.Core.LongPolling;
@@ -38,7 +37,7 @@ public class LongPollingService : ILongPollingService
             }
             catch (Exception e)
             {
-                _logger?.LogCritical(e, "Update error");
+                _logger?.LogCritical(e, "Update error.");
             }
         });
     }
@@ -59,12 +58,7 @@ public class LongPollingService : ILongPollingService
                 _logger?.LogDebug("Received an update from Telegram. UpdateId: {UpdateId}", update.UpdateId);
                 using (TBotEnvironment.SetRequest(update.ToSession()))
                 {
-                    using (LogContext.PushProperty("TBotTraceId", TBotEnvironment.CurrentRequest!.TraceId))
-                    {
-                        _logger?.LogDebug("Telegram update processing started. UpdateId: {UpdateId}", update.UpdateId);
-                        await updateAction(update);
-                        _logger?.LogDebug("Telegram update processing completed. UpdateId: {UpdateId}", update.UpdateId);
-                    }
+                    await updateAction(update);
                 }
                 
                 UpdateOptions.Offset = update.UpdateId + 1;

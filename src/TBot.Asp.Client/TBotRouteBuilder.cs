@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Serilog;
-using Serilog.Context;
 using TBot.Client.Telegram;
 using TBot.Client.Utilities;
 using TBot.Core.ConfigureOptions;
@@ -78,17 +76,13 @@ public class TBotRouteBuilder
                     logger?.LogDebug("Received an update from Telegram. UpdateId: {UpdateId}", update.UpdateId);
                     using (TBotEnvironment.SetRequest(update.ToSession()))
                     {
-                        using (LogContext.PushProperty("TBotTraceId", TBotEnvironment.CurrentRequest!.TraceId))
-                        {
-                            logger?.LogDebug("Telegram update processing started. UpdateId: {UpdateId}", update.UpdateId);
-                            await handler(context, serviceProvider, update);
-                            logger?.LogDebug("Telegram update processing completed. UpdateId: {UpdateId}", update.UpdateId);
-                        }
+                        await handler(context, serviceProvider, update);
                     }
                 }
                 catch (Exception e)
                 {
-                    logger?.LogCritical(e, "Update error");
+                    logger?.LogCritical(e, "Update error.");
+                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 }
             });
     }
