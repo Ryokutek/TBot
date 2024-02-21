@@ -101,7 +101,7 @@ public class TBotClient : ITBotClient
 
         watch.Stop();
         _logger?.LogDebug(
-            "Request completed. StatusCode: {StatusCode}. Time: {} ms. Description: {Description}",
+            "Request completed. StatusCode: {StatusCode}. Time: {ElapsedMilliseconds} ms. Description: {Description}.",
             response.StatusCode, watch.ElapsedMilliseconds, responseDto?.Description);
         
         if (responseDto is null) {
