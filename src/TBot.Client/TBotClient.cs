@@ -90,10 +90,18 @@ public class TBotClient : ITBotClient
     public async Task<Response<TResponseDomain>> SendAsync<TResponseDomain, TResponseDto>(
         RequestDescriptor request, Func<TResponseDto, TResponseDomain> convertor)
     {
+        _logger?.LogDebug("Request execution started. Method: {HttpMethod}. Endpoint: {Endpoint}.", 
+            request.Method, request.Endpoint);
+        
         var response = await SendAsync(request);
+        
         var responseSteam = await response.Content.ReadAsStreamAsync();
         var responseDto = await JsonSerializer.DeserializeAsync<ResponseDto<TResponseDto>>(responseSteam);
 
+        _logger?.LogDebug(
+            "Request completed. StatusCode: {StatusCode}. Description: {Description}",
+            response.StatusCode, responseDto?.Description);
+        
         if (responseDto is null) {
             throw new Exception($"Couldn't deserialize an response dto. RequestBody: {response.Content.ReadAsStringAsync()}");
         }
@@ -113,26 +121,7 @@ public class TBotClient : ITBotClient
         if (_callLimitService is not null && !string.IsNullOrEmpty(telegramRequest.ChatId)) {
             await _callLimitService.WaitAsync(telegramRequest.ChatId, _limitConfig!); 
         }
-        
-        _logger?.LogDebug("Telegram Bot API request has been started. Method: {HttpMethod}. Path: {RequestPath}.", 
-            request.Method, request.Endpoint);
-        
-        var response = await _requestService.SendAsync(telegramRequest.Build());
-        await LogRequestStatusAsync(response);
-        return response;
-    }
 
-    private async Task LogRequestStatusAsync(HttpResponseMessage response)
-    {
-        if (response.IsSuccessStatusCode)
-        {
-            _logger?.LogDebug("Telegram Bot API request completed. StatusCode: {StatusCode}.", response.StatusCode);
-        }
-        else
-        {
-            _logger?.LogWarning(
-                "Telegram Bot API request error. StatusCode: {StatusCode}. ResponseBody: {ResponseBody}",
-                response.StatusCode, await response.Content.ReadAsStringAsync());
-        }
+        return await _requestService.SendAsync(telegramRequest.Build());
     }
 }
