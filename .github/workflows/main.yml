@@ -11,7 +11,7 @@ jobs:
     - name: Build
       run: dotnet build -c Release
     - name: Pack Setup
-      run: dotnet nuget add source http://localhost:4545/v3/index.json -n GusMelford -u ${{ secrets.NUGET_USERNAME }} -p ${{ secrets.NUGET_PASSWORD }} --store-password-in-clear-text
+      run: dotnet nuget add source http://localhost:4545/v3/index.json -n RyokutekLocal -u ${{ secrets.NUGET_USERNAME }} -p ${{ secrets.NUGET_PASSWORD }} --store-password-in-clear-text
       continue-on-error: true
     - name: Pack
       run: dotnet pack
