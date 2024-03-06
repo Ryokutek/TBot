@@ -19,7 +19,7 @@ jobs:
       run: dotnet nuget push ./src/nupkgs/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source http://localhost:4545/v3/index.json --skip-duplicate
   notify:
     needs: [nuget]
-    runs-on: ryokutek-raspberrypi
+    runs-on: self-hosted
     steps:
     - name: Send Telegram Notify
       run: |
