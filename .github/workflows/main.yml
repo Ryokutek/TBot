@@ -4,7 +4,7 @@ on:
     branches: [main]
 jobs:
   nuget:
-    runs-on: ryokutek-raspberrypi
+    runs-on: self-hosted
     steps:
     - name: Checkout
       uses: actions/checkout@v3
