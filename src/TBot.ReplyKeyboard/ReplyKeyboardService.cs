@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using TBot.Core.RequestOptions;
-using TBot.Core.Stores;
+using TBot.Core.Storages;
 using TBot.Core.TBot;
 using TBot.Core.TBot.EnvironmentManagement;
 using TBot.Core.Telegram;
@@ -16,7 +16,7 @@ public class ReplyKeyboardService : UpdatePipeline
     private readonly ILogger<ReplyKeyboardService>? _logger;
     private readonly RootReplyKeyboard _rootReplyKeyboard;
     private readonly ITBotClient _tBotClient;
-    private readonly ITBotStore? _itBotStore;
+    private readonly ITBotCacheStore? _itBotStore;
 
     private static string GetKey(string chatId) => $"TBot:ReplyKeyboard:{chatId}";
     
@@ -24,7 +24,7 @@ public class ReplyKeyboardService : UpdatePipeline
         ILogger<ReplyKeyboardService>? logger,
         ReplyKeyboardModel replyKeyboardModel, 
         ITBotClient tBotClient, 
-        ITBotStore? itBotStore)
+        ITBotCacheStore? itBotStore)
     {
         _logger = logger;
         _rootReplyKeyboard = RootReplyKeyboard.Create(replyKeyboardModel);
@@ -32,17 +32,17 @@ public class ReplyKeyboardService : UpdatePipeline
         _itBotStore = itBotStore;
     }
 
-    public override async Task<Context> ExecuteAsync(Context context)
+    public override async Task<PipelineContext> ExecuteAsync(PipelineContext pipelineContext)
     {
         _logger?.LogDebug("Execution ReplyKeyboard processing has started.");
         
-        if (!context.Update.IsMessage()) {
+        if (!pipelineContext.Update.IsMessage()) {
             _logger?.LogDebug("Execution ReplyKeyboard processing has skipped.");
-            return await ExecuteNextAsync(context);
+            return await ExecuteNextAsync(pipelineContext);
         }
         
         var key = GetKey(TBotEnvironment.CurrentRequest!.FromChatId.ToString());
-        var message = context.Update.Message;
+        var message = pipelineContext.Update.Message;
         
         var keyboardModel = _rootReplyKeyboard.GetKeyboard(message!.Text!);
         
@@ -50,14 +50,14 @@ public class ReplyKeyboardService : UpdatePipeline
         {
             keyboardModel = await TryGetPreviousKeyboardAsync(key, message.Text!);
             if (keyboardModel is null) {
-                return await ExecuteNextAsync(context);
+                return await ExecuteNextAsync(pipelineContext);
             }
         }
 
         await SendKeyboardAsync(message.From!.Id, keyboardModel);
         await SaveReplyKeyboardStateAsync(key, keyboardModel.Name);
         _logger?.LogDebug("Execution ReplyKeyboard processing has completed.");
-        return await ExecuteNextAsync(context);
+        return await ExecuteNextAsync(pipelineContext);
     }
 
     private async Task<ReplyKeyboardModel?> TryGetPreviousKeyboardAsync(string key, string messageText)

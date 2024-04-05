@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E2B37EDC-16F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBot.Client", "src\TBot.Client\TBot.Client.csproj", "{02E412C0-F61F-416A-A3B3-7A3B77691D3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBot.LongCommand", "src\TBot.LongCommand\TBot.LongCommand.csproj", "{56A19F29-2E0C-4238-9D69-5C7A3F37E937}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBot.Pipeline.LongTermCommand", "src\TBot.Pipeline.LongTermCommand\TBot.Pipeline.LongTermCommand.csproj", "{56A19F29-2E0C-4238-9D69-5C7A3F37E937}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBot.Core", "src\TBot.Core\TBot.Core.csproj", "{BD8F1F87-96A3-4375-8FCD-8107390EB923}"
 EndProject
@@ -15,9 +15,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBot.ReplyKeyboard", "src\T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBot.Dto", "src\TBot.Dto\TBot.Dto.csproj", "{BA7FF2D7-A53D-4DCF-9C45-11B4C0E5D951}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBot.Asp.Client", "src\TBot.Asp.Client\TBot.Asp.Client.csproj", "{DD0F4F4F-BA9A-4BD7-9D52-874F08954A88}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBot.AspNet.Client", "src\TBot.AspNet.Client\TBot.AspNet.Client.csproj", "{DD0F4F4F-BA9A-4BD7-9D52-874F08954A88}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBot.Sandbox", "src\TBot.Sandbox\TBot.Sandbox.csproj", "{A5AEA8BE-0977-42FE-AD99-164680A9E88C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBot.Storage", "src\TBot.Storage\TBot.Storage.csproj", "{DF0B1A59-F568-454F-83B0-814131A4249B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +58,10 @@ Global
 		{A5AEA8BE-0977-42FE-AD99-164680A9E88C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5AEA8BE-0977-42FE-AD99-164680A9E88C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5AEA8BE-0977-42FE-AD99-164680A9E88C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF0B1A59-F568-454F-83B0-814131A4249B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF0B1A59-F568-454F-83B0-814131A4249B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF0B1A59-F568-454F-83B0-814131A4249B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF0B1A59-F568-454F-83B0-814131A4249B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{02E412C0-F61F-416A-A3B3-7A3B77691D3E} = {E2B37EDC-16F2-4568-BAE4-A4159E0A1D8B}
@@ -65,5 +71,6 @@ Global
 		{BA7FF2D7-A53D-4DCF-9C45-11B4C0E5D951} = {E2B37EDC-16F2-4568-BAE4-A4159E0A1D8B}
 		{DD0F4F4F-BA9A-4BD7-9D52-874F08954A88} = {E2B37EDC-16F2-4568-BAE4-A4159E0A1D8B}
 		{A5AEA8BE-0977-42FE-AD99-164680A9E88C} = {E2B37EDC-16F2-4568-BAE4-A4159E0A1D8B}
+		{DF0B1A59-F568-454F-83B0-814131A4249B} = {E2B37EDC-16F2-4568-BAE4-A4159E0A1D8B}
 	EndGlobalSection
 EndGlobal

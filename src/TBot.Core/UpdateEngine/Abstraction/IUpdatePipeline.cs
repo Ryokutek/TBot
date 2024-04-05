@@ -3,5 +3,5 @@
 public interface IUpdatePipeline
 {
     IUpdatePipeline SetNextPipeline(IUpdatePipeline updatePipeline);
-    Task<Context> ExecuteAsync(Context context);
+    Task<PipelineContext> ExecuteAsync(PipelineContext pipelineContext);
 }

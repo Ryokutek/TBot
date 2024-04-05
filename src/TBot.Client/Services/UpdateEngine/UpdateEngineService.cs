@@ -44,7 +44,7 @@ public class UpdateEngineService : IUpdateEngineService
             pipelineAdder = pipelineAdder.SetNextPipeline(_pipelines[i]);
         }
         
-        var context = Context.Create(TBotEnvironment.CurrentRequest!, update);
+        var context = PipelineContext.Create(TBotEnvironment.CurrentRequest!, update);
         await updatePipelineMaster.ExecuteAsync(context);
         _logger.LogDebug("UpdatePipeline processing has been completed. UpdateId: {UpdateId}", update.UpdateId);
     }

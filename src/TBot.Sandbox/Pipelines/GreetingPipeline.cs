@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using TBot.Core.RequestOptions;
 using TBot.Core.TBot;
 using TBot.Core.UpdateEngine;
@@ -6,16 +7,22 @@ namespace TBot.Sandbox.Pipelines;
 
 public class GreetingPipeline(ILogger<GreetingPipeline> logger, ITBotClient botClient) : UpdatePipeline
 {
-    public override async Task<Context> ExecuteAsync(Context context)
+    public override async Task<PipelineContext> ExecuteAsync(PipelineContext pipelineContext)
     {
         logger.LogInformation("GreetingPipeline execute...");
         
-        if (!context.Update.IsMessage())
-            return await ExecuteNextAsync(context);
+        if (!pipelineContext.Update.IsMessage())
+            return await ExecuteNextAsync(pipelineContext);
 
         await botClient.SendMessageAsync(
-            new SendMessageOptions(context.CurrentRequest.FromChatId, $"Greeting! {context.Update.Message!.From!.FirstName}"));
+            new SendMessageOptions(pipelineContext.CurrentRequest.FromChatId, Escape("Greeting! \\ Nikita loh........")));
         
-        return await ExecuteNextAsync(context);
+        return await ExecuteNextAsync(pipelineContext);
+    }
+    
+    public static string Escape(string originalString)
+    {
+        char[] specialChars = ['\\', '_', '*', '[', ']', '(', ')', '~', '`', '>', '<', '&', '#', '+', '-', '=', '|', '{', '}', '.', '!'];
+        return string.Concat(originalString.Select(c => specialChars.Contains(c) ? "\\" + c : c.ToString()));
     }
 }

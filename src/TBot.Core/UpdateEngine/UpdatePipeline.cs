@@ -12,17 +12,17 @@ public class UpdatePipeline : IUpdatePipeline
         return updatePipeline;
     }
 
-    public async Task<Context> ExecuteNextAsync(Context context)
+    public async Task<PipelineContext> ExecuteNextAsync(PipelineContext pipelineContext)
     {
         return _nextPipeline is not null 
-            ? await _nextPipeline.ExecuteAsync(context) 
-            : context;
+            ? await _nextPipeline.ExecuteAsync(pipelineContext) 
+            : pipelineContext;
     }
     
-    public virtual async Task<Context> ExecuteAsync(Context context)
+    public virtual async Task<PipelineContext> ExecuteAsync(PipelineContext pipelineContext)
     {
         return _nextPipeline is not null 
-            ? await _nextPipeline.ExecuteAsync(context) 
-            : context;
+            ? await _nextPipeline.ExecuteAsync(pipelineContext) 
+            : pipelineContext;
     }
 }
