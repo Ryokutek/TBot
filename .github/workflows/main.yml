@@ -1,36 +1,42 @@
-name: Processing Libraries
+name: Publish TBot libraries
+
 on: 
   push: 
     branches: [main]
+
 jobs:
   nuget:
-    runs-on: self-hosted
+    runs-on: docker-runner
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+
     - name: Build
       run: dotnet build -c Release
-    - name: Pack Setup
-      run: dotnet nuget add source http://localhost:4545/v3/index.json -n RyokutekLocal -u ${{ secrets.NUGET_USERNAME }} -p ${{ secrets.NUGET_PASSWORD }} --store-password-in-clear-text
+
+    - name: Pack setup
+      run: dotnet nuget add source ${{ secrets.NUGET_REPOSITORY_URL }} -n RyokutekLocal -u ${{ secrets.NUGET_USERNAME }} -p ${{ secrets.NUGET_PASSWORD }} --store-password-in-clear-text
       continue-on-error: true
+
     - name: Pack
       run: dotnet pack
+
     - name: Publish
-      run: dotnet nuget push ./src/nupkgs/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source http://localhost:4545/v3/index.json --skip-duplicate
+      run: dotnet nuget push ./src/nupkgs/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source ${{ secrets.NUGET_REPOSITORY_URL }} --skip-duplicate
+
   notify:
     needs: [nuget]
-    runs-on: self-hosted
+    runs-on: docker-runner
     steps:
-    - name: Send Telegram Notify
+    - name: Send Telegram notify
       run: |
         curl -X POST \
           -H "Content-Type: application/json" \
           -d '{
-            "chat_id": "${{secrets.TELEGRAM_CHAT_STATUS}}",
+            "chat_id": "${{ secrets.TELEGRAM_CHAT_STATUS }}",
             "text": " ${{ github.actor }} published TBot.
-            
             Commit message: ${{ github.event.commits[0].message }}
             Repository: ${{ github.repository }}
-            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}"
+            See changes: https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
           }' \
-          https://api.telegram.org/bot${{secrets.TELEGRAM_TOKEN}}/sendMessage
+          https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage
