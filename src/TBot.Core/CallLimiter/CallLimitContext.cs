@@ -3,22 +3,27 @@ namespace TBot.Core.CallLimiter;
 public class CallLimitContext
 {
     private const long BufferSecondTime = 1;
-    private uint Counter { get; set; }
+    public long Counter { get; set; }
     public int MaxCalls { get; init; }
     public TimeSpan Interval { get; init; }
+    public TimeSpan WaitInterval { get; set; }
     public List<Call> Calls { get; set; } = new ();
 
-    public void SaveCall()
+    public void SaveCall(int messageCount)
     {
-        Calls.Add(new Call
+        for (var i = 0; i < messageCount; i++)
         {
-            Id = Counter++,
-            Time = GetUtcNowUnixTimeSeconds()
-        });
+            Calls.Add(new Call
+            {
+                Id = Counter++,
+                Time = GetUtcNowUnixTimeSeconds()
+            });
+        }
     }
 
     public void Clear()
     {
+        WaitInterval = TimeSpan.Zero;
         Calls.Clear();
     }
 
@@ -39,7 +44,8 @@ public class CallLimitContext
         
         TimeSpan firstCallInterval = TimeSpan.FromSeconds(utcNow - firstCallTime.Value);
         TimeSpan waitInterval = Interval.Add(TimeSpan.FromSeconds(BufferSecondTime)) - firstCallInterval;
-        return waitInterval.TotalSeconds < 0 ? TimeSpan.Zero : waitInterval;
+        WaitInterval = waitInterval.TotalSeconds < 0 ? TimeSpan.Zero : waitInterval;
+        return WaitInterval;
     }
 
     private List<Call> GetFreshCalls(long utcNow)
@@ -56,6 +62,6 @@ public class CallLimitContext
 
 public class Call
 {
-    public uint Id { get; set; }
+    public long Id { get; set; }
     public long Time { get; set; }
 }

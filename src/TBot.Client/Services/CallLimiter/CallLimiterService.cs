@@ -22,7 +22,7 @@ public class CallLimiterService : ICallLimiterService
         _itBotStore = itBotStore;
     }
 
-    public async Task WaitAsync(string callLimiterKey, CallLimiterOptions callLimiterOptions)
+    public async Task WaitAsync(string callLimiterKey, int messageCount, CallLimiterOptions callLimiterOptions)
     {
         _callLimiterOptions = callLimiterOptions;
         Lockers.TryAdd(callLimiterKey, new Locker());
@@ -40,13 +40,14 @@ public class CallLimiterService : ICallLimiterService
             {
                 if (callLimiterSyncContext.HasNext())
                 {
-                    callLimiterSyncContext.SaveCall();
+                    callLimiterSyncContext.SaveCall(messageCount);
                     return;
                 }
 
                 var waitInterval = callLimiterSyncContext.GetWaitInterval();
                 _logger?.LogDebug("Sending request blocked. WaitInterval: {WaitInterval}. CallLimiterKey: {CallLimiterKey}", waitInterval, callLimiterKey);
                 
+                await UpdateCallLimitContextAsync(GetCallLimitContextKey(callLimiterKey), callLimiterSyncContext);
                 Wait(Lockers[callLimiterKey].RequestLock, waitInterval);
                 callLimiterSyncContext.Clear();
 

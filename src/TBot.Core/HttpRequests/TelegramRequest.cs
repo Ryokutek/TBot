@@ -11,6 +11,7 @@ public class TelegramRequest
     private static string GetBaseUrl (string token) => $"{ApiUrl}/bot{token}";
     private readonly RequestDescriptor _requestDescriptor;
 
+    public int MessageCount { get; private set; } = 0;
     public string ChatId { get; private set; } = string.Empty;
 
     private TelegramRequest(string token, RequestDescriptor requestDescriptor)
@@ -22,6 +23,8 @@ public class TelegramRequest
         if (chatIdParameter is not null) {
             ChatId = chatIdParameter.Value!.ToString()!;
         }
+
+        MessageCount = requestDescriptor.Contents.Count == 0 ? 1 : requestDescriptor.Contents.Count;
     }
 
     public static TelegramRequest Create(string token, RequestDescriptor requestDescriptor)
@@ -39,7 +42,7 @@ public class TelegramRequest
             httpRequestMessage.Headers.TryAddWithoutValidation(parameter.Key, parameter.Value);
         }
 
-        if (_requestDescriptor.Contents.Any()) {
+        if (_requestDescriptor.Contents.Count != 0) {
             httpRequestMessage.Content = BuildHttpContent();
         }
 
