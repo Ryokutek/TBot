@@ -27,9 +27,9 @@ public class CallLimitContext
         Calls.Clear();
     }
 
-    public bool HasNext()
+    public bool HasNext(int messageCount)
     {
-        return GetFreshCalls(GetUtcNowUnixTimeSeconds()).Count < MaxCalls;
+        return GetFreshCalls(GetUtcNowUnixTimeSeconds()).Count + messageCount < MaxCalls;
     }
 
     public TimeSpan GetWaitInterval()

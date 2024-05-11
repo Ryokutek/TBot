@@ -38,7 +38,7 @@ public class CallLimiterService : ICallLimiterService
             var callLimiterSyncContext = await GetLimiterContextAsync(GetCallLimitContextKey(callLimiterKey));
             try
             {
-                if (callLimiterSyncContext.HasNext())
+                if (callLimiterSyncContext.HasNext(messageCount))
                 {
                     callLimiterSyncContext.SaveCall(messageCount);
                     return;
