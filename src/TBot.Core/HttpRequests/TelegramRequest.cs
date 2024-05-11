@@ -23,6 +23,8 @@ public class TelegramRequest
         if (chatIdParameter is not null) {
             ChatId = chatIdParameter.Value!.ToString()!;
         }
+
+        MessageCount = requestDescriptor.Contents.Count == 0 ? 1 : requestDescriptor.Contents.Count;
     }
 
     public static TelegramRequest Create(string token, RequestDescriptor requestDescriptor)
@@ -42,9 +44,6 @@ public class TelegramRequest
 
         if (_requestDescriptor.Contents.Count != 0) {
             httpRequestMessage.Content = BuildHttpContent();
-        }
-        else {
-            MessageCount++;
         }
 
         uriBuilder.Query = string.Join("&", _requestDescriptor.QueryParameters
@@ -69,8 +68,6 @@ public class TelegramRequest
                     multipartFormDataContent.Add(new StringContent((content.Value as string)!), content.Name);
                     break;
             }
-
-            MessageCount++;
         }
 
         return multipartFormDataContent;

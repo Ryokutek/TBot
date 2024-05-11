@@ -47,6 +47,7 @@ public class CallLimiterService : ICallLimiterService
                 var waitInterval = callLimiterSyncContext.GetWaitInterval();
                 _logger?.LogDebug("Sending request blocked. WaitInterval: {WaitInterval}. CallLimiterKey: {CallLimiterKey}", waitInterval, callLimiterKey);
                 
+                await UpdateCallLimitContextAsync(GetCallLimitContextKey(callLimiterKey), callLimiterSyncContext);
                 Wait(Lockers[callLimiterKey].RequestLock, waitInterval);
                 callLimiterSyncContext.Clear();
 

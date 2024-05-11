@@ -6,20 +6,24 @@ public class CallLimitContext
     public long Counter { get; set; }
     public int MaxCalls { get; init; }
     public TimeSpan Interval { get; init; }
+    public TimeSpan WaitInterval { get; set; }
     public List<Call> Calls { get; set; } = new ();
 
     public void SaveCall(int messageCount)
     {
-        Counter += messageCount;
-        Calls.Add(new Call
+        for (var i = 0; i < messageCount; i++)
         {
-            Id = Counter,
-            Time = GetUtcNowUnixTimeSeconds()
-        });
+            Calls.Add(new Call
+            {
+                Id = Counter++,
+                Time = GetUtcNowUnixTimeSeconds()
+            });
+        }
     }
 
     public void Clear()
     {
+        WaitInterval = TimeSpan.Zero;
         Calls.Clear();
     }
 
@@ -40,7 +44,8 @@ public class CallLimitContext
         
         TimeSpan firstCallInterval = TimeSpan.FromSeconds(utcNow - firstCallTime.Value);
         TimeSpan waitInterval = Interval.Add(TimeSpan.FromSeconds(BufferSecondTime)) - firstCallInterval;
-        return waitInterval.TotalSeconds < 0 ? TimeSpan.Zero : waitInterval;
+        WaitInterval = waitInterval.TotalSeconds < 0 ? TimeSpan.Zero : waitInterval;
+        return WaitInterval;
     }
 
     private List<Call> GetFreshCalls(long utcNow)
