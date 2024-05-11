@@ -121,7 +121,7 @@ public class TBotClient : ITBotClient
         var telegramRequest = TelegramRequest.Create(_botOptions.Token, request);
         
         if (_callLimitService is not null && !string.IsNullOrEmpty(telegramRequest.ChatId)) {
-            await _callLimitService.WaitAsync(telegramRequest.ChatId, _limitConfig!); 
+            await _callLimitService.WaitAsync(telegramRequest.ChatId, telegramRequest.MessageCount, _limitConfig!); 
         }
 
         return await _requestService.SendAsync(telegramRequest.Build());

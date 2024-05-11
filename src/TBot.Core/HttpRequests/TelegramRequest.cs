@@ -11,6 +11,7 @@ public class TelegramRequest
     private static string GetBaseUrl (string token) => $"{ApiUrl}/bot{token}";
     private readonly RequestDescriptor _requestDescriptor;
 
+    public int MessageCount { get; private set; } = 0;
     public string ChatId { get; private set; } = string.Empty;
 
     private TelegramRequest(string token, RequestDescriptor requestDescriptor)
@@ -39,8 +40,11 @@ public class TelegramRequest
             httpRequestMessage.Headers.TryAddWithoutValidation(parameter.Key, parameter.Value);
         }
 
-        if (_requestDescriptor.Contents.Any()) {
+        if (_requestDescriptor.Contents.Count != 0) {
             httpRequestMessage.Content = BuildHttpContent();
+        }
+        else {
+            MessageCount++;
         }
 
         uriBuilder.Query = string.Join("&", _requestDescriptor.QueryParameters
@@ -65,6 +69,8 @@ public class TelegramRequest
                     multipartFormDataContent.Add(new StringContent((content.Value as string)!), content.Name);
                     break;
             }
+
+            MessageCount++;
         }
 
         return multipartFormDataContent;

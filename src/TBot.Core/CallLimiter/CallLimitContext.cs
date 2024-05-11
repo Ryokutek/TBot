@@ -3,16 +3,17 @@ namespace TBot.Core.CallLimiter;
 public class CallLimitContext
 {
     private const long BufferSecondTime = 1;
-    private uint Counter { get; set; }
+    public long Counter { get; set; }
     public int MaxCalls { get; init; }
     public TimeSpan Interval { get; init; }
     public List<Call> Calls { get; set; } = new ();
 
-    public void SaveCall()
+    public void SaveCall(int messageCount)
     {
+        Counter += messageCount;
         Calls.Add(new Call
         {
-            Id = Counter++,
+            Id = Counter,
             Time = GetUtcNowUnixTimeSeconds()
         });
     }
@@ -56,6 +57,6 @@ public class CallLimitContext
 
 public class Call
 {
-    public uint Id { get; set; }
+    public long Id { get; set; }
     public long Time { get; set; }
 }
