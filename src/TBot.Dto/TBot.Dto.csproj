@@ -1,10 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>14</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.7.2</Version>
+        <Version>0.2.0</Version>
         <Authors>gsMelford</Authors>
         <Company>Ryokutek</Company>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -13,7 +14,6 @@
         <RepositoryUrl>https://github.com/Ryokutek/TBot</RepositoryUrl>
         <RootNamespace>TBot.Dto</RootNamespace>
         <Product>TBot</Product>
-        <LangVersion>11</LangVersion>
         <IsPackable>true</IsPackable>
         <OutputPath>../nupkgs</OutputPath>
     </PropertyGroup>
