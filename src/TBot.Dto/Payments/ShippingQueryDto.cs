@@ -6,7 +6,7 @@ namespace TBot.Dto.Payments;
 /// <summary>
 /// This object contains information about an incoming shipping query.
 /// </summary>
-public class ShippingQueryDto
+public abstract class ShippingQueryDto
 {
 	/// <summary>
 	/// Unique query identifier

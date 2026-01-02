@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object contains information about the user whose identifier was shared with the bot using a KeyboardButtonRequestUser button.
 /// </summary>
-public class UserSharedDto
+public abstract class UserSharedDto
 {
     /// <summary>
     /// Identifier of the request

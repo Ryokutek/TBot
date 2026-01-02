@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents the bot's name.
 /// </summary>
-public class BotNameDto
+public abstract class BotNameDto
 {
 	/// <summary>
 	/// The bot's name

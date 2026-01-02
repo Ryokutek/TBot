@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Represents a chat member that has some additional privileges.
 /// </summary>
-public class ChatMemberAdministratorDto
+public abstract class ChatMemberAdministratorDto
 {
 	/// <summary>
 	/// The member's status in the chat, always “administrator”

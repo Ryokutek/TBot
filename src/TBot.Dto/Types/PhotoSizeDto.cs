@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents one size of a photo or a file / sticker thumbnail.
 /// </summary>
-public class PhotoSizeDto
+public abstract class PhotoSizeDto
 {
 	/// <summary>
 	/// Identifier for this file, which can be used to download or reuse the file

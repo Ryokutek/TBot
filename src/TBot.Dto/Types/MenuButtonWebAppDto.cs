@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Represents a menu button, which launches a Web App.
 /// </summary>
-public class MenuButtonWebAppDto
+public abstract class MenuButtonWebAppDto
 {
 	/// <summary>
 	/// Type of the button, must be web_app

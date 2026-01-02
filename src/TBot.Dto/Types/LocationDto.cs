@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents a point on the map.
 /// </summary>
-public class LocationDto
+public abstract class LocationDto
 {
 	/// <summary>
 	/// Longitude as defined by sender

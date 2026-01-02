@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using TBot.Client.Utilities;
 using TBot.Core.ConfigureOptions;
-using TBot.Core.LongPolling;
+using TBot.Core.LongPolling.Interfaces;
 using TBot.Core.RequestOptions;
-using TBot.Core.TBot;
 using TBot.Core.TBot.EnvironmentManagement;
-using TBot.Core.Telegram;
+using TBot.Core.TBot.Interfaces;
+using TBot.Dto.Updates;
 
 namespace TBot.Client.Services.LongPolling;
 
@@ -27,7 +26,7 @@ public class LongPollingService : ILongPollingService
         UpdateOptions.Timeout = updateOptions.Value.TimeoutSeconds;
     }
     
-    public void Start(Func<Update, Task> updateAction, CancellationToken? cancellationToken = null)
+    public void StartPolling(Func<UpdateDto, Task> updateAction, CancellationToken? cancellationToken = null)
     {
         Task.Factory.StartNew(async () =>
         {
@@ -42,7 +41,7 @@ public class LongPollingService : ILongPollingService
         });
     }
 
-    private async Task ExecuteUpdateAsync(Func<Update, Task> updateAction, CancellationToken? cancellationToken)
+    private async Task ExecuteUpdateAsync(Func<UpdateDto, Task> updateAction, CancellationToken? cancellationToken)
     {
         while (true)
         {

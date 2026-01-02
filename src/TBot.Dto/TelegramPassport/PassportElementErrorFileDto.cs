@@ -5,7 +5,7 @@ namespace TBot.Dto.TelegramPassport;
 /// <summary>
 /// Represents an issue with a document scan. The error is considered resolved when the file with the document scan changes.
 /// </summary>
-public class PassportElementErrorFileDto
+public abstract class PassportElementErrorFileDto
 {
 	/// <summary>
 	/// Error source, must be file

@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Represents an animation file (GIF or H.264/MPEG-4 AVC video without sound) to be sent.
 /// </summary>
-public class InputMediaAnimationDto
+public abstract class InputMediaAnimationDto
 {
 	/// <summary>
 	/// Type of the result, must be animation

@@ -1,27 +1,21 @@
-using TBot.Core.HttpRequests.Models;
+using TBot.Core.RequestManagement.Models;
 using TBot.Core.RequestOptions.Structure;
-using TBot.Core.Telegram;
+using TBot.Dto.Types;
 using InputMedia = TBot.Core.RequestOptions.Inputs.Media.InputMedia;
 
 namespace TBot.Core.RequestOptions;
 
-public class SendMediaGroupOptions : BaseOptions
+public abstract class SendMediaGroupOptions(ChatIdentifier chatId, List<InputMedia> mediaSet) : BaseOptions
 {
-    public SendMediaGroupOptions(ChatIdentifier chatId, List<InputMedia> mediaSet)
-    {
-        ChatId = chatId;
-        MediaSet = mediaSet;
-    }
-    
     [QueryParameter("chat_id", Required = true)]
-    public ChatIdentifier ChatId { get; set; }
-    
+    public ChatIdentifier ChatId { get; set; } = chatId;
+
     [QueryParameter("message_thread_id")]
     public int MessageThreadId { get; set; }
 
     [QueryParameter("media", IsJson = true)]
-    public List<InputMedia> MediaSet { get; set; }
-    
+    public List<InputMedia> MediaSet { get; set; } = mediaSet;
+
     [QueryParameter("disable_notification")]
     public bool DisableNotification { get; set; }
     

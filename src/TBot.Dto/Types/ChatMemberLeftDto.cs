@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Represents a chat member that isn't currently a member of the chat, but may join it themselves.
 /// </summary>
-public class ChatMemberLeftDto
+public abstract class ChatMemberLeftDto
 {
 	/// <summary>
 	/// The member's status in the chat, always “left”

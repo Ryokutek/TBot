@@ -6,7 +6,7 @@ namespace TBot.Dto.InlineModes;
 /// <summary>
 /// Represents a Game.
 /// </summary>
-public class InlineQueryResultGameDto
+public abstract class InlineQueryResultGameDto
 {
 	/// <summary>
 	/// Type of the result, must be game

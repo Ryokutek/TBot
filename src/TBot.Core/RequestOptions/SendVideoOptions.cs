@@ -1,27 +1,21 @@
 ﻿using TBot.Core.RequestOptions.Reply.MarkumParameters;
 using TBot.Core.RequestOptions.Structure;
-using TBot.Core.Telegram;
+using TBot.Dto.Types;
 using InputFile = TBot.Core.RequestOptions.Inputs.InputFile;
 
 namespace TBot.Core.RequestOptions;
 
-public class SendVideoOptions : BaseOptions
+public abstract class SendVideoOptions(ChatIdentifier chatId, InputFile video) : BaseOptions
 {
-    public SendVideoOptions(ChatIdentifier chatId, InputFile video)
-    {
-        ChatId = chatId;
-        Video = video;
-    }
-    
     [QueryParameter("chat_id", Required = true)]
-    public ChatIdentifier ChatId { get; set; }
-    
+    public ChatIdentifier ChatId { get; set; } = chatId;
+
     [QueryParameter("message_thread_id")]
     public int MessageThreadId { get; set; }
     
     [ContentParameter("video", Required = true)]
-    public InputFile Video { get; set; } = null!;
-    
+    public InputFile Video { get; set; } = video;
+
     [QueryParameter("duration")]
     public int? Duration { get; set; }
     
@@ -38,7 +32,7 @@ public class SendVideoOptions : BaseOptions
     public ParseMode? ParseMode { get; set; }
     
     [QueryParameter("caption_entities")]
-    public List<MessageEntity>? CaptionEntities { get; set; }
+    public List<MessageEntityDto>? CaptionEntities { get; set; }
     
     [QueryParameter("has_spoiler")]
     public bool? HasSpoiler { get; set; }

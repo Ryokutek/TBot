@@ -1,4 +1,4 @@
-using TBot.Core.HttpRequests;
+using TBot.Core.RequestManagement.Interfaces;
 
 namespace TBot.Client.Services.HttpRequests;
 

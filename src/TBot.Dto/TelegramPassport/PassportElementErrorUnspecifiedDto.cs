@@ -5,7 +5,7 @@ namespace TBot.Dto.TelegramPassport;
 /// <summary>
 /// Represents an issue in an unspecified place. The error is considered resolved when new data is added.
 /// </summary>
-public class PassportElementErrorUnspecifiedDto
+public abstract class PassportElementErrorUnspecifiedDto
 {
 	/// <summary>
 	/// Error source, must be unspecified

@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents an audio file to be treated as music by the Telegram clients.
 /// </summary>
-public class AudioDto
+public abstract class AudioDto
 {
 	/// <summary>
 	/// Identifier for this file, which can be used to download or reuse the file

@@ -1,26 +1,20 @@
 ﻿using System.Collections.Concurrent;
 using Microsoft.Extensions.Logging;
 using TBot.Core.CallLimiter;
+using TBot.Core.CallLimiter.Interfaces;
 using TBot.Core.ConfigureOptions;
-using TBot.Core.Stores;
+using TBot.Core.TBot.Interfaces;
 
 namespace TBot.Client.Services.CallLimiter;
 
-public class CallLimiterService : ICallLimiterService
+public class CallLimiterService(ITBotStore itBotStore, ILogger<ICallLimiterService>? logger = null)
+    : ICallLimiterService
 {
-    private readonly ITBotStore _itBotStore;
-    private readonly ILogger<ICallLimiterService>? _logger;
     private ConcurrentDictionary<string, Locker> Lockers { get; } = new ();
 
     private CallLimiterOptions _callLimiterOptions = null!;
     
     private static string GetCallLimitContextKey (string key) => $"{key}:{nameof(CallLimitContext)}";
-
-    public CallLimiterService(ITBotStore itBotStore, ILogger<ICallLimiterService>? logger = null)
-    {
-        _logger = logger;
-        _itBotStore = itBotStore;
-    }
 
     public async Task WaitAsync(string callLimiterKey, int messageCount, CallLimiterOptions callLimiterOptions)
     {
@@ -29,7 +23,7 @@ public class CallLimiterService : ICallLimiterService
         
         while (true)
         {
-            if (!await _itBotStore.LockTakeAsync(callLimiterKey))
+            if (!await itBotStore.LockTakeAsync(callLimiterKey))
             {
                 Wait(Lockers[callLimiterKey].LimiterStoreLock, _callLimiterOptions.StoreTimeout);
                 continue;
@@ -45,22 +39,22 @@ public class CallLimiterService : ICallLimiterService
                 }
 
                 var waitInterval = callLimiterSyncContext.GetWaitInterval();
-                _logger?.LogDebug("Sending request blocked. WaitInterval: {WaitInterval}. CallLimiterKey: {CallLimiterKey}", waitInterval, callLimiterKey);
+                logger?.LogDebug("Sending request blocked. WaitInterval: {WaitInterval}. CallLimiterKey: {CallLimiterKey}", waitInterval, callLimiterKey);
                 
                 await UpdateCallLimitContextAsync(GetCallLimitContextKey(callLimiterKey), callLimiterSyncContext);
                 Wait(Lockers[callLimiterKey].RequestLock, waitInterval);
                 callLimiterSyncContext.Clear();
 
-                _logger?.LogDebug("Sending request unblocked. CallLimiterKey: {CallLimiterKey}", callLimiterKey);
+                logger?.LogDebug("Sending request unblocked. CallLimiterKey: {CallLimiterKey}", callLimiterKey);
             }
             catch (Exception exception)
             {
-                _logger?.LogError(exception, "Error processing call limits. CallLimiterKey: {CallLimiterKey}", callLimiterKey);
+                logger?.LogError(exception, "Error processing call limits. CallLimiterKey: {CallLimiterKey}", callLimiterKey);
             }
             finally
             {
                 await UpdateCallLimitContextAsync(GetCallLimitContextKey(callLimiterKey), callLimiterSyncContext);
-                await _itBotStore.LockReleaseAsync(callLimiterKey);
+                await itBotStore.LockReleaseAsync(callLimiterKey);
                 Wake(Lockers[callLimiterKey].LimiterStoreLock);
             }
         }
@@ -70,9 +64,9 @@ public class CallLimiterService : ICallLimiterService
     {
         CallLimitContext callLimitContext;
         
-        if (await _itBotStore.ContainsAsync(callLimiterKey))
+        if (await itBotStore.ContainsAsync(callLimiterKey))
         {
-            callLimitContext = (await _itBotStore.GetAsync<CallLimitContext>(callLimiterKey))!;
+            callLimitContext = (await itBotStore.GetAsync<CallLimitContext>(callLimiterKey))!;
         }
         else
         {
@@ -82,8 +76,8 @@ public class CallLimiterService : ICallLimiterService
                 Interval = _callLimiterOptions.CallsInterval
             };
 
-            await _itBotStore.SetAsync(callLimiterKey, callLimitContext);
-            _logger?.LogDebug("Limit synchronization context successfully created. CallLimiterKey: {CallLimiterKey}", callLimiterKey);
+            await itBotStore.SetAsync(callLimiterKey, callLimitContext);
+            logger?.LogDebug("Limit synchronization context successfully created. CallLimiterKey: {CallLimiterKey}", callLimiterKey);
         }
 
         return callLimitContext;
@@ -91,7 +85,7 @@ public class CallLimiterService : ICallLimiterService
 
     private Task UpdateCallLimitContextAsync(string callLimiterKey, CallLimitContext callLimitContext)
     {
-        return _itBotStore.SetAsync(callLimiterKey, callLimitContext);
+        return itBotStore.SetAsync(callLimiterKey, callLimitContext);
     }
     
     private static void Wait(object lockObject, TimeSpan interval)

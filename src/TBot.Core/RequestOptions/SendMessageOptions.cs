@@ -1,31 +1,25 @@
 using TBot.Core.RequestOptions.Reply.MarkumParameters;
 using TBot.Core.RequestOptions.Structure;
-using TBot.Core.Telegram;
+using TBot.Dto.Types;
 
 namespace TBot.Core.RequestOptions;
 
-public class SendMessageOptions : BaseOptions
+public abstract class SendMessageOptions(ChatIdentifier chatId, string text) : BaseOptions
 {
-    public SendMessageOptions(ChatIdentifier chatId, string text)
-    {
-        ChatId = chatId;
-        Text = text;
-    }
-    
     [QueryParameter("chat_id", Required = true)]
-    public ChatIdentifier ChatId { get; set; }
-    
+    public ChatIdentifier ChatId { get; set; } = chatId;
+
     [QueryParameter("message_thread_id")]
     public int MessageThreadId { get; set; }
 
     [QueryParameter("text", Required = true)]
-    public string Text { get; set; }
-    
+    public string Text { get; set; } = text;
+
     [QueryParameter("parse_mode")]
     public ParseMode? ParseMode { get; set; }
         
     [QueryParameter("entities")]
-    public List<MessageEntity>? Entities { get; set; }
+    public List<MessageEntityDto>? Entities { get; set; }
     
     [QueryParameter("disable_web_page_preview")]
     public bool DisableWebPagePreview { get; set; }

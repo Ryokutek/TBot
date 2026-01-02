@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Describes actions that a non-administrator user is allowed to take in a chat.
 /// </summary>
-public class ChatPermissionsDto
+public abstract class ChatPermissionsDto
 {
 	/// <summary>
 	/// Optional. True, if the user is allowed to send text messages, contacts, invoices, locations and venues

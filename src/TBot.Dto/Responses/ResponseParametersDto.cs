@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace TBot.Dto.Responses;
 
-public class ResponseParametersDto
+public abstract class ResponseParametersDto
 {
     [JsonPropertyName("migrate_to_chat_id")]
     public int? MigrateToChatId { get; set; }

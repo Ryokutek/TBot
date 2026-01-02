@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents changes in the status of a chat member.
 /// </summary>
-public class ChatMemberUpdatedDto
+public abstract class ChatMemberUpdatedDto
 {
 	/// <summary>
 	/// Chat the user belongs to

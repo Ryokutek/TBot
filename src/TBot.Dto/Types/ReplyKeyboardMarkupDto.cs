@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents a custom keyboard with reply options (see Introduction to bots for details and examples).
 /// </summary>
-public class ReplyKeyboardMarkupDto
+public abstract class ReplyKeyboardMarkupDto
 {
 	/// <summary>
 	/// Array of button rows, each represented by an Array of KeyboardButton objects

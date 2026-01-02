@@ -5,7 +5,7 @@ namespace TBot.Dto.TelegramPassport;
 /// <summary>
 /// Represents an issue with the front side of a document. The error is considered resolved when the file with the front side of the document changes.
 /// </summary>
-public class PassportElementErrorFrontSideDto
+public abstract class PassportElementErrorFrontSideDto
 {
 	/// <summary>
 	/// Error source, must be front_side

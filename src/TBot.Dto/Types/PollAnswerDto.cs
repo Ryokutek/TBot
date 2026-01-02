@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents an answer of a user in a non-anonymous poll.
 /// </summary>
-public class PollAnswerDto
+public abstract class PollAnswerDto
 {
 	/// <summary>
 	/// Unique poll identifier

@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents one button of the reply keyboard. For simple text buttons, String can be used instead of this object to specify the button text. The optional fields web_app, request_user, request_chat, request_contact, request_location, and request_poll are mutually exclusive.
 /// </summary>
-public class KeyboardButtonDto
+public abstract class KeyboardButtonDto
 {
 	/// <summary>
 	/// Text of the button. If none of the optional fields are used, it will be sent as a message when the button is pressed

@@ -6,7 +6,7 @@ namespace TBot.Dto.InlineModes;
 /// <summary>
 /// Represents a venue. By default, the venue will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the venue.
 /// </summary>
-public class InlineQueryResultVenueDto
+public abstract class InlineQueryResultVenueDto
 {
 	/// <summary>
 	/// Type of the result, must be venue

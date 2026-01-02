@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Represents a video to be sent.
 /// </summary>
-public class InputMediaVideoDto
+public abstract class InputMediaVideoDto
 {
 	/// <summary>
 	/// Type of the result, must be video

@@ -3,14 +3,14 @@
 public class CurrentRequest
 {
     public Guid TraceId { get; private set; }
-    public long FromChatId { get; private set; }
-    public long FromUserId { get; private set; }
+    public long ChatId { get; private set; }
+    public long UserId { get; private set; }
 
-    private CurrentRequest(Guid traceId, long fromChatId, long fromUserId)
+    private CurrentRequest(Guid traceId, long chatId, long userId)
     {
         TraceId = traceId;
-        FromChatId = fromChatId;
-        FromUserId = fromUserId;
+        ChatId = chatId;
+        UserId = userId;
     }
 
     public static CurrentRequest Create(Guid id, long chatId, long userId)

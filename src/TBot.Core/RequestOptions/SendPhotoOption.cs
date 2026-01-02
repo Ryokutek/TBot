@@ -1,26 +1,20 @@
 using TBot.Core.RequestOptions.Reply.MarkumParameters;
 using TBot.Core.RequestOptions.Structure;
-using TBot.Core.Telegram;
+using TBot.Dto.Types;
 
 namespace TBot.Core.RequestOptions;
 
-public class SendPhotoOption : BaseOptions
+public class SendPhotoOption(ChatIdentifier chatId, InputFile photo) : BaseOptions
 {
-    public SendPhotoOption(ChatIdentifier chatId, InputFile photo)
-    {
-        ChatId = chatId;
-        Photo = photo;
-    }
-    
     [QueryParameter("chat_id", Required = true)]
-    public ChatIdentifier ChatId { get; set; }
-    
+    public ChatIdentifier ChatId { get; set; } = chatId;
+
     [QueryParameter("message_thread_id")]
     public int MessageThreadId { get; set; }
     
     [ContentParameter("photo", Required = true)]
-    public InputFile Photo { get; set; }
-    
+    public InputFile Photo { get; set; } = photo;
+
     [QueryParameter("caption")]
     public string? Caption { get; set; }
     
@@ -28,7 +22,7 @@ public class SendPhotoOption : BaseOptions
     public ParseMode? ParseMode { get; set; }
     
     [QueryParameter("caption_entities")]
-    public List<MessageEntity>? CaptionEntities { get; set; }
+    public List<MessageEntityDto>? CaptionEntities { get; set; }
     
     [QueryParameter("has_spoiler")]
     public bool? HasSpoiler { get; set; }

@@ -1,26 +1,20 @@
 using TBot.Core.RequestOptions.Reply.MarkumParameters;
 using TBot.Core.RequestOptions.Structure;
-using TBot.Core.Telegram;
+using TBot.Dto.Types;
 
 namespace TBot.Core.RequestOptions.Stickers;
 
-public class SendStickersOptions : BaseOptions
+public class SendStickersOptions(ChatIdentifier chatId, InputFile sticker) : BaseOptions
 {
-    public SendStickersOptions(ChatIdentifier chatId, InputFile sticker)
-    {
-        ChatId = chatId;
-        Sticker = sticker;
-    }
-    
     [QueryParameter("chat_id", Required = true)]
-    public ChatIdentifier ChatId { get; set; }
-    
+    public ChatIdentifier ChatId { get; set; } = chatId;
+
     [QueryParameter("message_thread_id")]
     public int MessageThreadId { get; set; }
 
     [QueryParameter("sticker", Required = true)]
-    public InputFile Sticker { get; set; }
-    
+    public InputFile Sticker { get; set; } = sticker;
+
     [QueryParameter("emoji")]
     public string Emoji { get; set; } = null!;
     

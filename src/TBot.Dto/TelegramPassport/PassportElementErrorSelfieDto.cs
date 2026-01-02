@@ -5,7 +5,7 @@ namespace TBot.Dto.TelegramPassport;
 /// <summary>
 /// Represents an issue with the selfie with a document. The error is considered resolved when the file with the selfie changes.
 /// </summary>
-public class PassportElementErrorSelfieDto
+public abstract class PassportElementErrorSelfieDto
 {
 	/// <summary>
 	/// Error source, must be selfie

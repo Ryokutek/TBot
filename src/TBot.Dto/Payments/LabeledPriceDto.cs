@@ -5,7 +5,7 @@ namespace TBot.Dto.Payments;
 /// <summary>
 /// This object represents a portion of the price for goods or services.
 /// </summary>
-public class LabeledPriceDto
+public abstract class LabeledPriceDto
 {
 	/// <summary>
 	/// Portion label

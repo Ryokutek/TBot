@@ -6,7 +6,7 @@ namespace TBot.Dto.Stikers;
 /// <summary>
 /// This object represents a sticker set.
 /// </summary>
-public class StickerSetDto
+public abstract class StickerSetDto
 {
 	/// <summary>
 	/// Sticker set name

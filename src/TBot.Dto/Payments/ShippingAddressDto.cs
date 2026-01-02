@@ -5,7 +5,7 @@ namespace TBot.Dto.Payments;
 /// <summary>
 /// This object represents a shipping address.
 /// </summary>
-public class ShippingAddressDto
+public abstract class ShippingAddressDto
 {
 	/// <summary>
 	/// Two-letter ISO 3166-1 alpha-2 country code

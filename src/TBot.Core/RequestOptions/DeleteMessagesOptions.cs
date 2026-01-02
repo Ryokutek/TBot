@@ -1,19 +1,13 @@
 ﻿using TBot.Core.RequestOptions.Structure;
-using TBot.Core.Telegram;
+using TBot.Dto.Types;
 
 namespace TBot.Core.RequestOptions;
 
-public class DeleteMessagesOptions : BaseOptions
+public abstract class DeleteMessagesOptions(ChatIdentifier chatId, List<int> messageId) : BaseOptions
 {
-    public DeleteMessagesOptions(ChatIdentifier chatId, List<int> messageId)
-    {
-        ChatId = chatId;
-        MessageIds = messageId;
-    }
-    
     [QueryParameter("chat_id", Required = true)]
-    public ChatIdentifier ChatId { get; set; }
+    public ChatIdentifier ChatId { get; set; } = chatId;
 
     [QueryParameter("message_ids", Required = true, IsJson = true)]
-    public List<int> MessageIds { get; set; }
+    public List<int> MessageIds { get; set; } = messageId;
 }

@@ -1,6 +1,6 @@
 namespace TBot.Dto.Types;
 
-public class VideoChatEndedDto
+public abstract class VideoChatEndedDto
 {
     
 }

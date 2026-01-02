@@ -9,7 +9,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents a message.
 /// </summary>
-public class MessageDto
+public abstract class MessageDto
 {
 	/// <summary>
 	/// Unique message identifier inside this chat

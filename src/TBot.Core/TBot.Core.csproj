@@ -5,8 +5,8 @@
         <LangVersion>14</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.2.0</Version>
-        <Authors>gsMelford</Authors>
+        <Version>0.2.1</Version>
+        <Authors>Makkusava,Kombushi</Authors>
         <Company>Ryokutek</Company>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <PackageId>TBot.Core</PackageId>
@@ -23,6 +23,14 @@
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0" />
       <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TBot.Dto\TBot.Dto.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="UpdateEngine\" />
     </ItemGroup>
 
 </Project>

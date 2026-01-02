@@ -6,7 +6,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents one button of an inline keyboard. You must use exactly one of the optional fields.
 /// </summary>
-public class InlineKeyboardButtonDto
+public abstract class InlineKeyboardButtonDto
 {
 	/// <summary>
 	/// Label text on the button

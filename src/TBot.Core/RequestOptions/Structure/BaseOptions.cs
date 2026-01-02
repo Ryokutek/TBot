@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using TBot.Core.HttpRequests.Models;
+using TBot.Core.RequestManagement.Models;
 using TBot.Core.RequestOptions.Inputs;
 
 namespace TBot.Core.RequestOptions.Structure;

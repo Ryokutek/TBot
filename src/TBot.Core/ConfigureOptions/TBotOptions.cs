@@ -10,17 +10,15 @@ public partial class TBotOptions
     [GeneratedRegex("^[0-9]{8,10}:[a-zA-Z0-9_-]{35}$", RegexOptions.Compiled)]
     private static partial Regex BotTokenValidationRegex();
 
-    private string _token = null!;
-    
     public string Token
     {
-        get => _token;
-        set
+        get;
+        init
         {
-            _token = value;
-            Validate(_token);
+            field = value;
+            Validate(field);
         }
-    }
+    } = null!;
 
     public string UpdatePath { get; set; } = null!;
     public UpdateOptions UpdateOptions { get; set; } = new ();
@@ -29,7 +27,7 @@ public partial class TBotOptions
     private static void Validate(string token)
     {
         if (!string.IsNullOrEmpty(token)) {
-            if (BotTokenValidationRegex().Matches(token).Any()) {
+            if (BotTokenValidationRegex().Count(token) != 0) {
                 return;
             }
         }

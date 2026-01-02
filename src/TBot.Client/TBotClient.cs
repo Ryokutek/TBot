@@ -2,14 +2,13 @@ using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using TBot.Client.Telegram;
-using TBot.Core.CallLimiter;
+using TBot.Core.CallLimiter.Interfaces;
 using TBot.Core.ConfigureOptions;
-using TBot.Core.HttpRequests;
+using TBot.Core.RequestManagement;
+using TBot.Core.RequestManagement.Interfaces;
 using TBot.Core.RequestOptions;
 using TBot.Core.RequestOptions.Structure;
-using TBot.Core.TBot;
-using TBot.Core.Telegram;
+using TBot.Core.TBot.Interfaces;
 using TBot.Dto.Responses;
 using TBot.Dto.Types;
 using TBot.Dto.Updates;
@@ -17,80 +16,64 @@ using TBot.Dto.Updates;
 namespace TBot.Client;
 
 // ReSharper disable once InconsistentNaming
-public class TBotClient : ITBotClient
+public class TBotClient(
+    ILogger<ITBotClient>? logger,
+    IOptions<TBotOptions> botOptions,
+    IRequestService requestService,
+    IOptions<CallLimiterOptions>? limitConfig = null,
+    ICallLimiterService? callLimitService = null) : ITBotClient
 {
-    private readonly ILogger<ITBotClient>? _logger;
-    private readonly IRequestService _requestService;
-    private readonly ICallLimiterService? _callLimitService;
+    private readonly TBotOptions _botOptions = botOptions.Value;
+    private readonly CallLimiterOptions? _limitConfig = limitConfig?.Value;
 
-    private readonly TBotOptions _botOptions;
-    private readonly CallLimiterOptions? _limitConfig;
-
-    public TBotClient(
-        ILogger<ITBotClient>? logger,
-        IOptions<TBotOptions> botOptions,
-        IRequestService requestService, 
-        IOptions<CallLimiterOptions>? limitConfig = null,
-        ICallLimiterService? callLimitService = null)
-    {
-        _logger = logger;
-        _botOptions = botOptions.Value;
-        _limitConfig = limitConfig?.Value;
-        _requestService = requestService;
-        _callLimitService = callLimitService;
-    }
-
-    public Task<Response<List<Message>>> SendMediaGroupAsync(SendMediaGroupOptions options)
+    public Task<ResponseDto<List<MessageDto>>> SendMediaGroupAsync(SendMediaGroupOptions options)
     {
         var request = RequestDescriptor.CreatePost("/sendMediaGroup", options);
-        return SendAsync<List<Message>, List<MessageDto>>(request, 
-            dtoList => dtoList.Select(Converter.ToDomain).ToList());
+        return SendAsync<List<MessageDto>>(request);
     }
     
-    public Task<Response<Message>> SendPhotoAsync(SendVideoOptions options)
+    public Task<ResponseDto<MessageDto>> SendPhotoAsync(SendVideoOptions options)
     {
         return SendBaseRequestAsync("/sendPhoto", options);
     }
     
-    public Task<Response<Message>> SendVideoAsync(SendVideoOptions options)
+    public Task<ResponseDto<MessageDto>> SendVideoAsync(SendVideoOptions options)
     {
         return SendBaseRequestAsync("/sendVideo", options);
     }
 
-    public Task<Response<bool>> DeleteMessagesAsync(DeleteMessagesOptions options)
+    public Task<ResponseDto<bool>> DeleteMessagesAsync(DeleteMessagesOptions options)
     {
         var request = RequestDescriptor.CreatePost("/deleteMessages", options);
-        return SendAsync<bool, bool>(request, b => b);
+        return SendAsync<bool>(request);
     }
     
-    public Task<Response<bool>> DeleteMessageAsync(DeleteMessageOptions options)
+    public Task<ResponseDto<bool>> DeleteMessageAsync(DeleteMessageOptions options)
     {
         var request = RequestDescriptor.CreatePost("/deleteMessage", options);
-        return SendAsync<bool, bool>(request, b => b);
+        return SendAsync<bool>(request);
     }
     
-    public Task<Response<Message>> SendMessageAsync(SendMessageOptions options)
+    public Task<ResponseDto<MessageDto>> SendMessageAsync(SendMessageOptions options)
     {
         return SendBaseRequestAsync("/sendMessage", options);
     }
 
-    private Task<Response<Message>> SendBaseRequestAsync(string endpoint, BaseOptions options)
+    private Task<ResponseDto<MessageDto>> SendBaseRequestAsync(string endpoint, BaseOptions options)
     {
         var request = RequestDescriptor.CreatePost(endpoint, options);
-        return SendAsync<Message, MessageDto>(request, Converter.ToDomain);
+        return SendAsync<MessageDto>(request);
     }
     
-    public Task<Response<List<Update>>> GetUpdateAsync(GetUpdateOptions options)
+    public Task<ResponseDto<List<UpdateDto>>> GetUpdateAsync(GetUpdateOptions options)
     {
         var request = RequestDescriptor.CreatePost("/getUpdates", options);
-        return SendAsync<List<Update>, List<UpdateDto>>(request, 
-            dtoList => dtoList.Select(Converter.ToDomain).ToList());
+        return SendAsync<List<UpdateDto>>(request);
     }
     
-    public async Task<Response<TResponseDomain>> SendAsync<TResponseDomain, TResponseDto>(
-        RequestDescriptor request, Func<TResponseDto, TResponseDomain> convertor)
+    public async Task<ResponseDto<TResponseDto>> SendAsync<TResponseDto>(RequestDescriptor request)
     {
-        _logger?.LogDebug("Request execution started. Method: {HttpMethod}. Endpoint: {Endpoint}.", 
+        logger?.LogDebug("Request execution started. Method: {HttpMethod}. Endpoint: {Endpoint}.", 
             request.Method, request.Endpoint);
 
         var watch = Stopwatch.StartNew();
@@ -100,30 +83,21 @@ public class TBotClient : ITBotClient
         var responseDto = await JsonSerializer.DeserializeAsync<ResponseDto<TResponseDto>>(responseSteam);
 
         watch.Stop();
-        _logger?.LogDebug(
+        logger?.LogDebug(
             "Request completed. StatusCode: {StatusCode}. Time: {ElapsedMilliseconds} ms. Description: {Description}.",
             response.StatusCode, watch.ElapsedMilliseconds, responseDto?.Description);
         
-        if (responseDto is null) {
-            throw new Exception($"Couldn't deserialize an response dto. RequestBody: {response.Content.ReadAsStringAsync()}");
-        }
-
-        return Response<TResponseDomain>.Create(
-            responseDto.StatusOk,
-            responseDto.Result is null ? default : convertor(responseDto.Result!),
-            responseDto.Description,
-            responseDto.ErrorCode,
-            responseDto.ResponseParameters?.ToDomain());
+        return responseDto ?? throw new Exception($"Couldn't deserialize an response dto. RequestBody: {response.Content.ReadAsStringAsync()}");
     }
 
     public async Task<HttpResponseMessage> SendAsync(RequestDescriptor request)
     {
         var telegramRequest = TelegramRequest.Create(_botOptions.Token, request);
         
-        if (_callLimitService is not null && !string.IsNullOrEmpty(telegramRequest.ChatId)) {
-            await _callLimitService.WaitAsync(telegramRequest.ChatId, telegramRequest.MessageCount, _limitConfig!); 
+        if (callLimitService is not null && !string.IsNullOrEmpty(telegramRequest.ChatId)) {
+            await callLimitService.WaitAsync(telegramRequest.ChatId, telegramRequest.MessageCount, _limitConfig!); 
         }
 
-        return await _requestService.SendAsync(telegramRequest.Build());
+        return await requestService.SendAsync(telegramRequest.Build());
     }
 }

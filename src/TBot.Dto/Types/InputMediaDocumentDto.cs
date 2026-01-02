@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Represents a general file to be sent.
 /// </summary>
-public class InputMediaDocumentDto
+public abstract class InputMediaDocumentDto
 {
 	/// <summary>
 	/// Type of the result, must be document

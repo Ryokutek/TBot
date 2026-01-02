@@ -5,7 +5,7 @@ namespace TBot.Dto.TelegramPassport;
 /// <summary>
 /// This object represents a file uploaded to Telegram Passport. Currently all Telegram Passport files are in JPEG format when decrypted and don't exceed 10MB.
 /// </summary>
-public class PassportFileDto
+public abstract class PassportFileDto
 {
 	/// <summary>
 	/// Identifier for this file, which can be used to download or reuse the file

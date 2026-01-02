@@ -6,7 +6,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Describes documents or other Telegram Passport elements shared with the bot by the user.
 /// </summary>
-public class EncryptedPassportElementDto
+public abstract class EncryptedPassportElementDto
 {
 	/// <summary>
 	/// Element type. One of “personal_details”, “passport”, “driver_license”, “identity_card”, “internal_passport”, “address”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”, “phone_number”, “email”.

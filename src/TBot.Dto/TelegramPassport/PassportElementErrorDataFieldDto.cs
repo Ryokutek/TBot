@@ -5,7 +5,7 @@ namespace TBot.Dto.TelegramPassport;
 /// <summary>
 /// Represents an issue in one of the data fields that was provided by the user. The error is considered resolved when the field's value changes.
 /// </summary>
-public class PassportElementErrorDataFieldDto
+public abstract class PassportElementErrorDataFieldDto
 {
 	/// <summary>
 	/// Error source, must be data

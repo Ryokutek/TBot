@@ -1,5 +1,5 @@
 using Newtonsoft.Json;
-using TBot.Core.Telegram;
+using TBot.Dto.Types;
 
 namespace TBot.Core.RequestOptions.Inputs.Media;
 
@@ -19,5 +19,5 @@ public abstract class InputMedia
     public ParseMode ParseMode { get; set; }
     
     [JsonProperty("caption_entities", DefaultValueHandling = DefaultValueHandling.Ignore)]
-    public List<MessageEntity>? CaptionEntities { get; set; }
+    public List<MessageEntityDto>? CaptionEntities { get; set; }
 }

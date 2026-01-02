@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object contains information about one answer option in a poll.
 /// </summary>
-public class PollOptionDto
+public abstract class PollOptionDto
 {
 	/// <summary>
 	/// Option text, 1-100 characters

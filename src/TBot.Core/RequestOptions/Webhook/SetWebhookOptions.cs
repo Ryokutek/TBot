@@ -2,16 +2,11 @@ using TBot.Core.RequestOptions.Structure;
 
 namespace TBot.Core.RequestOptions.Webhook;
 
-public class SetWebhookOptions : BaseOptions
+public class SetWebhookOptions(string url) : BaseOptions
 {
-    public SetWebhookOptions(string url)
-    {
-        Url = url;
-    }
-    
     [QueryParameter("url", Required = true)]
-    public string Url { get; set; }
-    
+    public string Url { get; set; } = url;
+
     /*[Parameter("certificate", Required = true)]
     public InputFile certificate { get; set; } = null!;*/
     

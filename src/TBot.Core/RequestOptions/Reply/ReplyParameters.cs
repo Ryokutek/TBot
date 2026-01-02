@@ -1,18 +1,13 @@
 using TBot.Core.RequestOptions.Structure;
-using TBot.Core.Telegram;
+using TBot.Dto.Types;
 
 namespace TBot.Core.RequestOptions.Reply;
 
-public class ReplyParameters
+public abstract class ReplyParameters(int messageId)
 {
-    public ReplyParameters(int messageId)
-    {
-        MessageId = messageId;
-    }
-    
     [QueryParameter("message_id", Required = true)]
-    public int MessageId { get; set; }
-    
+    public int MessageId { get; set; } = messageId;
+
     [QueryParameter("chat_id")]
     public ChatIdentifier? ChatId { get; set; }
     
@@ -26,7 +21,7 @@ public class ReplyParameters
     public ParseMode? QuoteParseMode { get; set; }
     
     [QueryParameter("quote_position")]
-    public List<MessageEntity>? MessageEntities { get; set; }
+    public List<MessageEntityDto>? MessageEntities { get; set; }
     
     [QueryParameter("quote_position", Required = true)]
     public int? QuotePosition { get; set; }

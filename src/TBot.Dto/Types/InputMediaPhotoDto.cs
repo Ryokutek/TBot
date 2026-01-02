@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Represents a photo to be sent.
 /// </summary>
-public class InputMediaPhotoDto
+public abstract class InputMediaPhotoDto
 {
 	/// <summary>
 	/// Type of the result, must be photo

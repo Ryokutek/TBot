@@ -6,7 +6,7 @@ namespace TBot.Dto.Payments;
 /// <summary>
 /// This object contains basic information about a successful payment.
 /// </summary>
-public class SuccessfulPaymentDto
+public abstract class SuccessfulPaymentDto
 {
 	/// <summary>
 	/// Three-letter ISO 4217 currency code

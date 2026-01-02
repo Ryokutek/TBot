@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Represents a join request sent to a chat.
 /// </summary>
-public class ChatJoinRequestDto
+public abstract class ChatJoinRequestDto
 {
 	/// <summary>
 	/// Chat to which the request was sent

@@ -6,7 +6,7 @@ namespace TBot.Dto.Games;
 /// <summary>
 /// This object represents one row of the high scores table for a game.
 /// </summary>
-public class GameHighScoreDto
+public abstract class GameHighScoreDto
 {
 	/// <summary>
 	/// Position in high score table for the game

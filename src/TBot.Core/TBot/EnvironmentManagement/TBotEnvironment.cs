@@ -1,7 +1,7 @@
 ﻿namespace TBot.Core.TBot.EnvironmentManagement;
 
 // ReSharper disable once InconsistentNaming
-public class TBotEnvironment
+public abstract class TBotEnvironment
 {
     private static readonly AsyncLocal<CurrentRequest?> AsyncLocalCurrentRequest = new();
     

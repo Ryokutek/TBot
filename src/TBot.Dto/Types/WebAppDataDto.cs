@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Describes data sent from a Web App to the bot.
 /// </summary>
-public class WebAppDataDto
+public abstract class WebAppDataDto
 {
 	/// <summary>
 	/// The data. Be aware that a bad client can send arbitrary data in this field.
