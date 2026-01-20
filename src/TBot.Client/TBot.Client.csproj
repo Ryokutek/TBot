@@ -28,10 +28,6 @@
       <ProjectReference Include="..\TBot.Dto\TBot.Dto.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Services\UpdateEngine\" />
-    </ItemGroup>
-
     <Target Condition="$(Configuration) == 'Debug'" Name="NugetPackAutoVersioning" AfterTargets="Build">
         <Exec Command="dotnet pack -p:PackageVersion=$([System.DateTime]::Now.ToString(&quot;yyyy.MM.dd.HHmm&quot;)) --no-build --configuration $(Configuration) --output &quot;$(SolutionDir)nuget-local&quot;" />
     </Target>
