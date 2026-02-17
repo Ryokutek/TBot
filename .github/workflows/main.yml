@@ -15,7 +15,7 @@ jobs:
       run: dotnet build -c Release
 
     - name: Pack setup
-      run: dotnet nuget add source ${{ secrets.NUGET_REPOSITORY_URL }} -n RyokutekLocal -u ${{ secrets.NUGET_USERNAME }} -p ${{ secrets.NUGET_PASSWORD }} --store-password-in-clear-text
+      run: dotnet nuget add source ${{ secrets.NUGET_REPOSITORY_URL }} -n RyokutekGlobal -u ${{ secrets.NUGET_USERNAME }} -p ${{ secrets.NUGET_PASSWORD }} --store-password-in-clear-text
       continue-on-error: true
 
     - name: Pack
