@@ -6,7 +6,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents information about an order.
 /// </summary>
-public abstract class OrderInfoDto
+public class OrderInfoDto
 {
 	/// <summary>
 	/// Optional. User name

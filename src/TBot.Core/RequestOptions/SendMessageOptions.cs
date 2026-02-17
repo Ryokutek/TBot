@@ -4,7 +4,7 @@ using TBot.Dto.Types;
 
 namespace TBot.Core.RequestOptions;
 
-public abstract class SendMessageOptions(ChatIdentifier chatId, string text) : BaseOptions
+public class SendMessageOptions(ChatIdentifier chatId, string text) : BaseOptions
 {
     [QueryParameter("chat_id", Required = true)]
     public ChatIdentifier ChatId { get; set; } = chatId;

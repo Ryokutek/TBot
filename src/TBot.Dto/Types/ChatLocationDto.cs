@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Represents a location to which a chat is connected.
 /// </summary>
-public abstract class ChatLocationDto
+public class ChatLocationDto
 {
 	/// <summary>
 	/// The location to which the supergroup is connected. Can't be a live location.

@@ -1,6 +1,6 @@
 namespace TBot.Dto.Types;
 
-public abstract class InputFile
+public class InputFile
 {
     
 }

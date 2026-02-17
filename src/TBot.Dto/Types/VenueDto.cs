@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents a venue.
 /// </summary>
-public abstract class VenueDto
+public class VenueDto
 {
 	/// <summary>
 	/// Venue location. Can't be a live location

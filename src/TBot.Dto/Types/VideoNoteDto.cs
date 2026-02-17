@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents a video message (available in Telegram apps as of v.4.0).
 /// </summary>
-public abstract class VideoNoteDto
+public class VideoNoteDto
 {
 	/// <summary>
 	/// Identifier for this file, which can be used to download or reuse the file

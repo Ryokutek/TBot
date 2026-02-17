@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Stores", "Stores", "{01EA5F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBot.Redis", "src\TBot.Redis\TBot.Redis.csproj", "{B99C3095-3A56-455C-B09E-3E62D690BBD1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{26F572C0-4A87-4425-A106-CC21AE8B3A19}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,10 @@ Global
 		{B99C3095-3A56-455C-B09E-3E62D690BBD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B99C3095-3A56-455C-B09E-3E62D690BBD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B99C3095-3A56-455C-B09E-3E62D690BBD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26F572C0-4A87-4425-A106-CC21AE8B3A19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26F572C0-4A87-4425-A106-CC21AE8B3A19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26F572C0-4A87-4425-A106-CC21AE8B3A19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26F572C0-4A87-4425-A106-CC21AE8B3A19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BD8F1F87-96A3-4375-8FCD-8107390EB923} = {E2B37EDC-16F2-4568-BAE4-A4159E0A1D8B}

@@ -6,7 +6,7 @@ namespace TBot.Dto.InlineModes;
 /// <summary>
 /// Represents a contact with a phone number. By default, this contact will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the contact.
 /// </summary>
-public abstract class InlineQueryResultContactDto
+public class InlineQueryResultContactDto
 {
 	/// <summary>
 	/// Type of the result, must be contact

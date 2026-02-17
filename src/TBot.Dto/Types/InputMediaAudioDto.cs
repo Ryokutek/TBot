@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Represents an audio file to be treated as music to be sent.
 /// </summary>
-public abstract class InputMediaAudioDto
+public class InputMediaAudioDto
 {
 	/// <summary>
 	/// Type of the result, must be audio

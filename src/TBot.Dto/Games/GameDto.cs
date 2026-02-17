@@ -6,7 +6,7 @@ namespace TBot.Dto.Games;
 /// <summary>
 /// This object represents a game. Use BotFather to create and edit games, their short names will act as unique identifiers.
 /// </summary>
-public abstract class GameDto
+public class GameDto
 {
 	/// <summary>
 	/// Title of the game

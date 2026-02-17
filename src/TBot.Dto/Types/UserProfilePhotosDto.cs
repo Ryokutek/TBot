@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represent a user's profile pictures.
 /// </summary>
-public abstract class UserProfilePhotosDto
+public class UserProfilePhotosDto
 {
 	/// <summary>
 	/// Total number of profile pictures the target user has

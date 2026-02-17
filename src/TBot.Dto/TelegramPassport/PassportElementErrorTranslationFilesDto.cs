@@ -5,7 +5,7 @@ namespace TBot.Dto.TelegramPassport;
 /// <summary>
 /// Represents an issue with the translated version of a document. The error is considered resolved when a file with the document translation change.
 /// </summary>
-public abstract class PassportElementErrorTranslationFilesDto
+public class PassportElementErrorTranslationFilesDto
 {
 	/// <summary>
 	/// Error source, must be translation_files

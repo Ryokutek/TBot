@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents a general file (as opposed to photos, voice messages and audio files).
 /// </summary>
-public abstract class DocumentDto
+public class DocumentDto
 {
 	/// <summary>
 	/// Identifier for this file, which can be used to download or reuse the file

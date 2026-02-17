@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TBot.Core.LongPolling.Interfaces;
+using TBot.Core.UpdateEngine;
 using TBot.Dto.Updates;
 
 namespace TBot.Asp.Client;
@@ -21,6 +22,8 @@ public class TBotLongPollingBuilder(IServiceProvider serviceProvider)
         longPollingService.StartPolling(async update =>
         {
             await using var scope = serviceProvider.CreateAsyncScope();
+            var updateEngine = scope.ServiceProvider.GetRequiredService<IUpdateEngineService>();
+            await updateEngine.ExecuteAsync(update);
         }, cancellationToken);
         
         return serviceProvider;

@@ -5,7 +5,7 @@ using InputMedia = TBot.Core.RequestOptions.Inputs.Media.InputMedia;
 
 namespace TBot.Core.RequestOptions;
 
-public abstract class SendMediaGroupOptions(ChatIdentifier chatId, List<InputMedia> mediaSet) : BaseOptions
+public class SendMediaGroupOptions(ChatIdentifier chatId, List<InputMedia> mediaSet) : BaseOptions
 {
     [QueryParameter("chat_id", Required = true)]
     public ChatIdentifier ChatId { get; set; } = chatId;

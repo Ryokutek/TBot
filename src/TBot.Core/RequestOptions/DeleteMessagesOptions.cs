@@ -1,9 +1,9 @@
-﻿using TBot.Core.RequestOptions.Structure;
+using TBot.Core.RequestOptions.Structure;
 using TBot.Dto.Types;
 
 namespace TBot.Core.RequestOptions;
 
-public abstract class DeleteMessagesOptions(ChatIdentifier chatId, List<int> messageId) : BaseOptions
+public class DeleteMessagesOptions(ChatIdentifier chatId, List<int> messageId) : BaseOptions
 {
     [QueryParameter("chat_id", Required = true)]
     public ChatIdentifier ChatId { get; set; } = chatId;

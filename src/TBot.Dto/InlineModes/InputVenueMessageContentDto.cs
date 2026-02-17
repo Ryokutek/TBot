@@ -5,7 +5,7 @@ namespace TBot.Dto.InlineModes;
 /// <summary>
 /// Represents the content of a venue message to be sent as the result of an inline query.
 /// </summary>
-public abstract class InputVenueMessageContentDto
+public class InputVenueMessageContentDto
 {
 	/// <summary>
 	/// Latitude of the venue in degrees

@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Represents a chat member that was banned in the chat and can't return to the chat or view chat messages.
 /// </summary>
-public abstract class ChatMemberBannedDto
+public class ChatMemberBannedDto
 {
 	/// <summary>
 	/// The member's status in the chat, always “kicked”

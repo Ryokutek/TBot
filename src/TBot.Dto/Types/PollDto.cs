@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object contains information about a poll.
 /// </summary>
-public abstract class PollDto
+public class PollDto
 {
 	/// <summary>
 	/// Unique poll identifier

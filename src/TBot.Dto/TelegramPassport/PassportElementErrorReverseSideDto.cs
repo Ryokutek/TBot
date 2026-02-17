@@ -5,7 +5,7 @@ namespace TBot.Dto.TelegramPassport;
 /// <summary>
 /// Represents an issue with the reverse side of a document. The error is considered resolved when the file with reverse side of the document changes.
 /// </summary>
-public abstract class PassportElementErrorReverseSideDto
+public class PassportElementErrorReverseSideDto
 {
 	/// <summary>
 	/// Error source, must be reverse_side

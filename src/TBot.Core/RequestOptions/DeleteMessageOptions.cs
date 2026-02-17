@@ -3,7 +3,7 @@ using TBot.Dto.Types;
 
 namespace TBot.Core.RequestOptions;
 
-public abstract class DeleteMessageOptions(ChatIdentifier chatId, int messageId) : BaseOptions
+public class DeleteMessageOptions(ChatIdentifier chatId, int messageId) : BaseOptions
 {
     [QueryParameter("chat_id", Required = true)]
     public ChatIdentifier ChatId { get; set; } = chatId;

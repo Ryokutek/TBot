@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents a voice note.
 /// </summary>
-public abstract class VoiceDto
+public class VoiceDto
 {
 	/// <summary>
 	/// Identifier for this file, which can be used to download or reuse the file

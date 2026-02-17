@@ -5,7 +5,7 @@ namespace TBot.Dto.Stikers;
 /// <summary>
 /// This object describes the position on faces where a mask should be placed by default.
 /// </summary>
-public abstract class MaskPositionDto
+public class MaskPositionDto
 {
 	/// <summary>
 	/// The part of the face relative to which the mask should be placed. One of “forehead”, “eyes”, “mouth”, or “chin”.

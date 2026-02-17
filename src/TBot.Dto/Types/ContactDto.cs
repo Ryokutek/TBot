@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents a phone contact.
 /// </summary>
-public abstract class ContactDto
+public class ContactDto
 {
 	/// <summary>
 	/// Contact's phone number

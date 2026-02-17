@@ -6,7 +6,7 @@ namespace TBot.Dto.InlineModes;
 /// <summary>
 /// This object represents a button to be shown above inline query results. You must use exactly one of the optional fields.
 /// </summary>
-public abstract class InlineQueryResultsButtonDto
+public class InlineQueryResultsButtonDto
 {
 	/// <summary>
 	/// Label text on the button

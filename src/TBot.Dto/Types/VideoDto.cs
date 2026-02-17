@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents a video file.
 /// </summary>
-public abstract class VideoDto
+public class VideoDto
 {
 	/// <summary>
 	/// Identifier for this file, which can be used to download or reuse the file

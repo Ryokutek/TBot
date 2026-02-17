@@ -6,7 +6,7 @@ namespace TBot.Dto.InlineModes;
 /// <summary>
 /// Represents the content of a text message to be sent as the result of an inline query.
 /// </summary>
-public abstract class InputTextMessageContentDto
+public class InputTextMessageContentDto
 {
 	/// <summary>
 	/// Text of the message to be sent, 1-4096 characters

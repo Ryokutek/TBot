@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents a service message about a change in auto-delete timer settings.
 /// </summary>
-public abstract class MessageAutoDeleteTimerChangedDto
+public class MessageAutoDeleteTimerChangedDto
 {
 	/// <summary>
 	/// New auto-delete time for messages in the chat; in seconds

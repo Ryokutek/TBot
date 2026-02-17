@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Represents an invite link for a chat.
 /// </summary>
-public abstract class ChatInviteLinkDto
+public class ChatInviteLinkDto
 {
 	/// <summary>
 	/// The invite link. If the link was created by another chat administrator, then the second part of the link will be replaced with “…”.

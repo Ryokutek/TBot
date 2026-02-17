@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents a unique message identifier.
 /// </summary>
-public abstract class MessageIdDto
+public class MessageIdDto
 {
 	/// <summary>
 	/// Unique message identifier

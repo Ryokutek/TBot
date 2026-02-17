@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents an animated emoji that displays a random value.
 /// </summary>
-public abstract class DiceDto
+public class DiceDto
 {
 	/// <summary>
 	/// Emoji on which the dice throw animation is based

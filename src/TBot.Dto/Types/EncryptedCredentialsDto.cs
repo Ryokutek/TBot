@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Describes data required for decrypting and authenticating EncryptedPassportElement. See the Telegram Passport Documentation for a complete description of the data decryption and authentication processes.
 /// </summary>
-public abstract class EncryptedCredentialsDto
+public class EncryptedCredentialsDto
 {
 	/// <summary>
 	/// Base64-encoded encrypted JSON-serialized data with unique user's payload, data hashes and secrets required for EncryptedPassportElement decryption and authentication

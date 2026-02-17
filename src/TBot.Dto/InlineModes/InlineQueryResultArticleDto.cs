@@ -6,7 +6,7 @@ namespace TBot.Dto.InlineModes;
 /// <summary>
 /// Represents a link to an article or web page.
 /// </summary>
-public abstract class InlineQueryResultArticleDto
+public class InlineQueryResultArticleDto
 {
 	/// <summary>
 	/// Type of the result, must be article

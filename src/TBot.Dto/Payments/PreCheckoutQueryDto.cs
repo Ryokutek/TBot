@@ -6,7 +6,7 @@ namespace TBot.Dto.Payments;
 /// <summary>
 /// This object contains information about an incoming pre-checkout query.
 /// </summary>
-public abstract class PreCheckoutQueryDto
+public class PreCheckoutQueryDto
 {
 	/// <summary>
 	/// Unique query identifier

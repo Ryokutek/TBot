@@ -22,10 +22,11 @@ public class UpdateEngineService(
             }
         }
 
+        await using var scope = serviceProvider.CreateAsyncScope();
         foreach (var handlerType in handlerTypes)
         {
             var handler = (IUpdateHandler)ActivatorUtilities
-                .GetServiceOrCreateInstance(serviceProvider, handlerType);
+                .GetServiceOrCreateInstance(scope.ServiceProvider, handlerType);
 
             await handler.ExecuteAsync(context);
         }

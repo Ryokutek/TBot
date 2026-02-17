@@ -5,7 +5,7 @@ namespace TBot.Dto.Payments;
 /// <summary>
 /// This object represents one shipping option.
 /// </summary>
-public abstract class ShippingOptionDto
+public class ShippingOptionDto
 {
 	/// <summary>
 	/// Shipping option identifier

@@ -5,7 +5,7 @@ namespace TBot.Dto.InlineModes;
 /// <summary>
 /// Represents the content of a contact message to be sent as the result of an inline query.
 /// </summary>
-public abstract class InputContactMessageContentDto
+public class InputContactMessageContentDto
 {
 	/// <summary>
 	/// Contact's phone number

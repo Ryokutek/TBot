@@ -6,7 +6,7 @@ namespace TBot.Dto.Stikers;
 /// <summary>
 /// This object represents a sticker.
 /// </summary>
-public abstract class StickerDto
+public class StickerDto
 {
 	/// <summary>
 	/// Identifier for this file, which can be used to download or reuse the file

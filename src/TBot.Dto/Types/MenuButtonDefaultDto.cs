@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Describes that no specific value for the menu button was set.
 /// </summary>
-public abstract class MenuButtonDefaultDto
+public class MenuButtonDefaultDto
 {
 	/// <summary>
 	/// Type of the button, must be default

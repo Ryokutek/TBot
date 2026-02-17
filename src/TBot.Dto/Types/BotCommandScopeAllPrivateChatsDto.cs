@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Represents the scope of bot commands, covering all private chats.
 /// </summary>
-public abstract class BotCommandScopeAllPrivateChatsDto
+public class BotCommandScopeAllPrivateChatsDto
 {
 	/// <summary>
 	/// Scope type, must be all_private_chats

@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents a forum topic.
 /// </summary>
-public abstract class ForumTopicDto
+public class ForumTopicDto
 {
 	/// <summary>
 	/// Unique identifier of the forum topic

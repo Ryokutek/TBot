@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Describes a Web App.
 /// </summary>
-public abstract class WebAppInfoDto
+public class WebAppInfoDto
 {
 	/// <summary>
 	/// An HTTPS URL of a Web App to be opened with additional data as specified in Initializing Web Apps

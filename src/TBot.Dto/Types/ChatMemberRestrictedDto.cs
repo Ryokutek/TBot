@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Represents a chat member that is under certain restrictions in the chat. Supergroups only.
 /// </summary>
-public abstract class ChatMemberRestrictedDto
+public class ChatMemberRestrictedDto
 {
 	/// <summary>
 	/// The member's status in the chat, always “restricted”

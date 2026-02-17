@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents an inline keyboard that appears right next to the message it belongs to.
 /// </summary>
-public abstract class InlineKeyboardMarkupDto
+public class InlineKeyboardMarkupDto
 {
 	/// <summary>
 	/// Array of button rows, each represented by an Array of InlineKeyboardButton objects

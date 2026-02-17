@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object contains basic information about an invoice.
 /// </summary>
-public abstract class InvoiceDto
+public class InvoiceDto
 {
 	/// <summary>
 	/// Product name

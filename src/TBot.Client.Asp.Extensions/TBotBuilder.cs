@@ -5,12 +5,13 @@ using TBot.Client;
 using TBot.Client.Services.CallLimiter;
 using TBot.Client.Services.HttpRequests;
 using TBot.Client.Services.LongPolling;
-using TBot.Core;
+using TBot.Client.Services.UpdateEngine;
 using TBot.Core.CallLimiter.Interfaces;
 using TBot.Core.ConfigureOptions;
 using TBot.Core.LongPolling.Interfaces;
 using TBot.Core.RequestManagement.Interfaces;
 using TBot.Core.TBot.Interfaces;
+using TBot.Core.UpdateEngine;
 
 namespace TBot.Asp.Client;
 
@@ -34,13 +35,20 @@ public class TBotBuilder
 
     public TBotBuilder EnableCallLimiter()
     {
-        _serviceCollection.AddTransient<ICallLimiterService, CallLimiterService>();
+        _serviceCollection.AddScoped<ICallLimiterService, CallLimiterService>();
         return this;
     }
     
     public TBotBuilder AddLongPolling()
     {
+        //TODO: Singleton
         _serviceCollection.AddTransient<ILongPollingService, LongPollingService>();
+        return this;
+    }
+    
+    public TBotBuilder AddUpdateEngine()
+    {
+        _serviceCollection.AddScoped<IUpdateEngineService, UpdateEngineService>();
         return this;
     }
 

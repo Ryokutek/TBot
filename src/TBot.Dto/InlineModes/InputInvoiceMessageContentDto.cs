@@ -6,7 +6,7 @@ namespace TBot.Dto.InlineModes;
 /// <summary>
 /// Represents the content of an invoice message to be sent as the result of an inline query.
 /// </summary>
-public abstract class InputInvoiceMessageContentDto
+public class InputInvoiceMessageContentDto
 {
 	/// <summary>
 	/// Product name, 1-32 characters

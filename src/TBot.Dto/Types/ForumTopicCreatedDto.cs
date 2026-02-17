@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents a service message about a new forum topic created in the chat.
 /// </summary>
-public abstract class ForumTopicCreatedDto
+public class ForumTopicCreatedDto
 {
 	/// <summary>
 	/// Name of the topic

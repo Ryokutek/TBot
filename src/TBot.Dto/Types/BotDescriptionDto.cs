@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object represents the bot's description.
 /// </summary>
-public abstract class BotDescriptionDto
+public class BotDescriptionDto
 {
 	/// <summary>
 	/// The bot's description

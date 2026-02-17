@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Represents the scope of bot commands, covering a specific chat.
 /// </summary>
-public abstract class BotCommandScopeChatDto
+public class BotCommandScopeChatDto
 {
 	/// <summary>
 	/// Scope type, must be chat

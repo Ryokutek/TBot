@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Represents the rights of an administrator in a chat.
 /// </summary>
-public abstract class ChatAdministratorRightsDto
+public class ChatAdministratorRightsDto
 {
 	/// <summary>
 	/// True, if the user's presence in the chat is hidden

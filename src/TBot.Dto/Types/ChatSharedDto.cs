@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// This object contains information about the chat whose identifier was shared with the bot using a KeyboardButtonRequestChat button.
 /// </summary>
-public abstract class ChatSharedDto
+public class ChatSharedDto
 {
 	/// <summary>
 	/// Identifier of the request

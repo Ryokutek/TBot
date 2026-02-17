@@ -1,11 +1,11 @@
-﻿using TBot.Core.RequestOptions.Reply.MarkumParameters;
+using TBot.Core.RequestOptions.Reply.MarkumParameters;
 using TBot.Core.RequestOptions.Structure;
 using TBot.Dto.Types;
 using InputFile = TBot.Core.RequestOptions.Inputs.InputFile;
 
 namespace TBot.Core.RequestOptions;
 
-public abstract class SendVideoOptions(ChatIdentifier chatId, InputFile video) : BaseOptions
+public class SendVideoOptions(ChatIdentifier chatId, InputFile video) : BaseOptions
 {
     [QueryParameter("chat_id", Required = true)]
     public ChatIdentifier ChatId { get; set; } = chatId;

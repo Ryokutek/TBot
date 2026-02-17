@@ -5,7 +5,7 @@ namespace TBot.Dto.Types;
 /// <summary>
 /// Represents a menu button, which opens the bot's list of commands.
 /// </summary>
-public abstract class MenuButtonCommandsDto
+public class MenuButtonCommandsDto
 {
 	/// <summary>
 	/// Type of the button, must be commands
