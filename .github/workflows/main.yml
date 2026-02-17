@@ -15,14 +15,14 @@ jobs:
       run: dotnet build -c Release
 
     - name: Pack setup
-      run: dotnet nuget add source ${{ secrets.NUGET_REPOSITORY_URL }} -n RyokutekLocal -u ${{ secrets.NUGET_USERNAME }} -p ${{ secrets.NUGET_PASSWORD }} --store-password-in-clear-text
+      run: dotnet nuget add source ${{ secrets.NUGET_REPOSITORY_URL }} -n nuget.org -u ${{ secrets.NUGET_USERNAME }} -p ${{ secrets.NUGET_PASSWORD }} --store-password-in-clear-text
       continue-on-error: true
 
     - name: Pack
       run: dotnet pack
 
     - name: Publish
-      run: dotnet nuget push ./src/nupkgs/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source ${{ secrets.NUGET_REPOSITORY_URL }} --skip-duplicate
+      run: dotnet nuget push ./src/nupkgs/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source nuget.org --skip-duplicate
 
   notify:
     needs: [nuget]
