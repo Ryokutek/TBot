@@ -5,7 +5,7 @@
         <LangVersion>14</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.2.1</Version>
+        <Version>0.2.2</Version>
         <Authors>Makkusava,Kombushi</Authors>
         <Company>Ryokutek</Company>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
