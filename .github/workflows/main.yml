@@ -22,7 +22,7 @@ jobs:
       run: dotnet pack
 
     - name: Publish
-      run: dotnet nuget push ./src/nupkgs/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source ${{ secrets.NUGET_REPOSITORY_URL }} --skip-duplicate
+      run: dotnet nuget push ./src/nupkgs/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --skip-duplicate
 
   notify:
     needs: [nuget]
