@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace TBot.Asp.Client;
+namespace TBot.Client.Asp.Extensions;
 
 public static class Extensions
 {

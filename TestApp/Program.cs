@@ -1,11 +1,13 @@
-using TBot.Asp.Client;
-using TBot.Core.UpdateEngine;
+using TBot.Client.Asp.Extensions;
 using TestApp;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddTBot(botBuilder => botBuilder.AddLongPolling().AddUpdateEngine());
-builder.Services.AddScoped<IUpdateTrigger, UpdateTrigger>();
+builder.AddTBot(botBuilder => botBuilder
+    .AddLongPolling()
+    .AddUpdateEngine()
+    .AddTrigger<WelcomeTrigger>()
+);
 
 var app = builder.Build();
 

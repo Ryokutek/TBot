@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TBot.Core.LongPolling.Interfaces;
 using TBot.Core.UpdateEngine;
+using TBot.Core.UpdateEngine.Interfaces;
 using TBot.Dto.Updates;
 
-namespace TBot.Asp.Client;
+namespace TBot.Client.Asp.Extensions;
 
 // ReSharper disable once InconsistentNaming
 public class TBotLongPollingBuilder(IServiceProvider serviceProvider)

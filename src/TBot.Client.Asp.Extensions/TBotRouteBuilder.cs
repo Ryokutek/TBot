@@ -10,7 +10,7 @@ using TBot.Core.ConfigureOptions;
 using TBot.Core.TBot.EnvironmentManagement;
 using TBot.Dto.Updates;
 
-namespace TBot.Asp.Client;
+namespace TBot.Client.Asp.Extensions;
 
 // ReSharper disable once InconsistentNaming
 public class TBotRouteBuilder(IEndpointRouteBuilder endpointRouteBuilder)

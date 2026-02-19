@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TBot.Core.UpdateEngine;
+using TBot.Core.UpdateEngine.Interfaces;
 using TBot.Dto.Updates;
 
 namespace TBot.Client.Services.UpdateEngine;
@@ -11,15 +12,12 @@ public class UpdateEngineService(
     public async Task ExecuteAsync(UpdateDto updateDto)
     {
         var handlerTypes = new List<Type>();
-        var context = new UpdateContext { UpdateDto = updateDto };
+        var context = UpdateContext.Create(updateDto);
         
-        foreach (var updateTrigger in updateTriggers)
+        foreach (var trigger in updateTriggers)
         {
-            var (isTriggered, handlerType) = await updateTrigger.CheckAsync(context);
-
-            if (isTriggered) {
-                handlerTypes.Add(handlerType);
-            }
+            if (await trigger.CheckAsync(context))
+                handlerTypes.Add(trigger.HandlerType);
         }
 
         await using var scope = serviceProvider.CreateAsyncScope();
@@ -28,7 +26,7 @@ public class UpdateEngineService(
             var handler = (IUpdateHandler)ActivatorUtilities
                 .GetServiceOrCreateInstance(scope.ServiceProvider, handlerType);
 
-            await handler.ExecuteAsync(context);
+            await handler.ExecuteAsync(context, CancellationToken.None);
         }
     }
 }

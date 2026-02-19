@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TBot.Client;
 using TBot.Client.Services.CallLimiter;
 using TBot.Client.Services.HttpRequests;
 using TBot.Client.Services.LongPolling;
@@ -12,8 +11,9 @@ using TBot.Core.LongPolling.Interfaces;
 using TBot.Core.RequestManagement.Interfaces;
 using TBot.Core.TBot.Interfaces;
 using TBot.Core.UpdateEngine;
+using TBot.Core.UpdateEngine.Interfaces;
 
-namespace TBot.Asp.Client;
+namespace TBot.Client.Asp.Extensions;
 
 // ReSharper disable once InconsistentNaming
 public class TBotBuilder
@@ -46,10 +46,10 @@ public class TBotBuilder
         return this;
     }
     
-    public TBotBuilder AddUpdateEngine()
+    public UpdateEngineBuilder AddUpdateEngine()
     {
         _serviceCollection.AddScoped<IUpdateEngineService, UpdateEngineService>();
-        return this;
+        return new UpdateEngineBuilder(_serviceCollection);
     }
 
     private void ConfigureOptions()
